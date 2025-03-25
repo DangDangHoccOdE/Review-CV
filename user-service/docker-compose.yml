@@ -1,0 +1,43 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Dang972004@
+      MYSQL_DATABASE: portfolio
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - spring-network
+
+  user-services:
+    build: .
+    container_name: user-services-container
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_APPLICATION_NAME: user-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/portfolio
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Dang972004@
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+      SERVER_PORT: 8088
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://host.docker.internal:8761/eureka
+    ports:
+      - "8088:8088"
+    networks:
+      - spring-network
+
+volumes:
+  mysql_data:
+
+networks:
+  spring-network:
