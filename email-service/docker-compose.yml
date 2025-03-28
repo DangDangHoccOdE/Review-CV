@@ -1,0 +1,31 @@
+services:
+  email-service:
+    image: email-service:latest
+    container_name: email-service
+    restart: always
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: danghoangtest1@gmail.com
+      SPRING_MAIL_PASSWORD: rnsmddbxngmybmat
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED: "true"
+      MAIL_SMTP_DEBUG: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_CONNECTIONTIMEOUT: 5000
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_TIMEOUT: 5000
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_WRITETIMEOUT: 5000
+      SPRING_APPLICATION_NAME: email-service
+      SERVER_PORT: 8087
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8671/eureka
+    depends_on:
+      - eureka-server
+
+  eureka-server:
+      image: eureka-server:latest
+      container_name: eureka-server
+      restart: always
+      ports:
+        - "8671:8671"
