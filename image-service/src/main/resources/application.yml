@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: image-service
+server:
+  port: 8083
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8671/eureka
+
+cloudinary:
+  cloud_name: dhv7v0enl
+  api_key: 321888329748168
+  api_secret: tJYJsxpU4KbSNEjJju49n_06l3c

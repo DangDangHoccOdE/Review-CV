@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_image_service
+    restart: always
+    environment:
+      MYSQL_DATABASE: image
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Dang972004@
+      MYSQL_ROOT_PASSWORD: Dang972004@
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  image-service:
+    build: .
+    container_name: image_service
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_APPLICATION_NAME: image-service
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/image?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Dang972004@
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+      SPRING_SERVLET_MULTIPART_ENABLED: "true"
+      SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: 10MB
+      SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: 10MB
+      SERVER_PORT: 8083
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://localhost:8671/eureka
+      CLOUDINARY_CLOUD_NAME: dhv7v0enl
+      CLOUDINARY_API_KEY: 321888329748168
+      CLOUDINARY_API_SECRET: tJYJsxpU4KbSNEjJju49n_06l3c
+    ports:
+      - "8083:8083"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["java", "-jar", "app.jar"]
+
+volumes:
+  mysql_data:
