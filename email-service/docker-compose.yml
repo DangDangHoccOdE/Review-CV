@@ -1,6 +1,6 @@
 services:
   email-service:
-    image: email-service:latest
+    build: .
     container_name: email-service
     restart: always
     ports:
@@ -20,12 +20,10 @@ services:
       SPRING_APPLICATION_NAME: email-service
       SERVER_PORT: 8087
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8671/eureka
-    depends_on:
-      - eureka-server
+    networks:
+      - spring-network
 
-  eureka-server:
-      image: eureka-server:latest
-      container_name: eureka-server
-      restart: always
-      ports:
-        - "8671:8671"
+networks:
+  spring-network:
+
+

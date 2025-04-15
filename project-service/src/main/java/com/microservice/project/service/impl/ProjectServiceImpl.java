@@ -8,7 +8,7 @@ import com.microservice.project.exception.Error;
 import com.microservice.project.model.Project;
 import com.microservice.project.openFeign.ImageClient;
 import com.microservice.project.openFeign.ProfileClient;
-import com.microservice.project.openFeign.test;
+import com.microservice.project.openFeign.Test;
 import com.microservice.project.repository.ProjectRepository;
 import com.microservice.project.service.inter.ProjectService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ImageClient imageClient;
     @Autowired
-    private test ts;
+    private Test ts;
 
     private ProjectDto convertToDTO(Project project) {
         return modelMapper.map(project, ProjectDto.class);

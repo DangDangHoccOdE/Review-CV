@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
-    @Query("SELECT n FROM Notification n where n.userId =:userId")
+    @Query("SELECT n FROM Notification n where n.idUser =:userId")
     List<Notification> getNotificationsByUserId(@Param("userId") Integer userId);
 }

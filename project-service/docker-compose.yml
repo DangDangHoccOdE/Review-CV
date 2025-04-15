@@ -1,76 +1,54 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: project1
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3306:3306"
-    networks:
-      - spring-network
-    volumes:
-      - mysql_data:/var/lib/mysql
+#  mysql:
+#    image: mysql:8.0
+#    container_name: mysql-db
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: Dang972004@
+#      MYSQL_DATABASE: project
+#      MYSQL_USER: user
+#      MYSQL_PASSWORD: password
+#    ports:
+#      - "3307:3306"
+#    networks:
+#      - spring-network
+#    volumes:
+#      - mysql_data:/var/lib/mysql
 
-  eureka-server:
-    image: openjdk:17
-    container_name: eureka-server
-    restart: always
-    ports:
-      - "8671:8671"
-    networks:
-      - spring-network
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: ["java", "-jar", "eureka-server.jar"]
+#  eureka-server:
+#    image: openjdk:17
+#    container_name: eureka-server
+#    restart: always
+#    ports:
+#      - "8671:8671"
+#    networks:
+#      - spring-network
+#    volumes:
+#      - .:/app
+#    working_dir: /app
+#    command: ["java", "-jar", "eureka-server.jar"]
 
   project-service:
-    image: openjdk:17
-    container_name: project-service
+    build: .
+    container_name: project-service-container
     restart: always
-    depends_on:
-      - mysql
-      - eureka-server
+#    depends_on:
+#      - mysql
+#      - eureka-server
     environment:
       SPRING_APPLICATION_NAME: project-service
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/project1?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/project
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+      SERVER_PORT: 8086
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8671/eureka
     ports:
-      - "8081:8081"
+      - "8086:8086"
     networks:
       - spring-network
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: [ "java", "-jar", "project-service.jar" ]
-
-  comment-service:
-      image: openjdk:17
-      container_name: comment-service
-      restart: always
-      depends_on:
-        - mysql
-        - eureka-server
-      environment:
-        SPRING_APPLICATION_NAME: comment-service
-        SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/project1?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
-        SPRING_DATASOURCE_USERNAME: user
-        SPRING_DATASOURCE_PASSWORD: password
-        EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8671/eureka
-      ports:
-        - "8086:8086"
-      networks:
-        - spring-network
-      volumes:
-        - .:/app
-      working_dir: /app
-      command: [ "java", "-jar", "comment-service.jar" ]
 
 networks:
   spring-network:

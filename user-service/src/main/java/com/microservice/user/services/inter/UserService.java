@@ -9,7 +9,7 @@ public interface UserService {
     boolean checkUser(Integer id);
     UserDto getCurrentUser();
     UserDto update(String token, UserDto userDto);
-    List<UserDto> getAllUsers();
+    List<UserDto> getAllUsers(String token);
     List<UserDto> findAllUserByIds(List<Integer> ids);
     UserDto updateIsActive(String token, Integer id);
     UserDto delete(String token, Integer id);

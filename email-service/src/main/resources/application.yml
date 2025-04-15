@@ -1,9 +1,27 @@
 spring:
   application:
     name: email-service
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: danghoangtest1@gmail.com
+    password: rnsmddbxngmybmat
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
 server:
   port: 8087
+
 eureka:
   client:
-    serviceUrl:
+    service-url:
       defaultZone: http://localhost:8671/eureka

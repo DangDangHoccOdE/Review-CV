@@ -5,14 +5,15 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: image
-      MYSQL_USER: root
-      MYSQL_PASSWORD: Dang972004@
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: Dang972004@
     ports:
-      - "3306:3306"
+      - "3309:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - spring-network
 
   image-service:
     build: .
@@ -22,7 +23,7 @@ services:
       - mysql
     environment:
       SPRING_APPLICATION_NAME: image-service
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/image?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/image
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Dang972004@
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -38,10 +39,11 @@ services:
       CLOUDINARY_API_SECRET: tJYJsxpU4KbSNEjJju49n_06l3c
     ports:
       - "8083:8083"
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: ["java", "-jar", "app.jar"]
+    networks:
+      - spring-network
 
 volumes:
   mysql_data:
+
+networks:
+  spring-network:

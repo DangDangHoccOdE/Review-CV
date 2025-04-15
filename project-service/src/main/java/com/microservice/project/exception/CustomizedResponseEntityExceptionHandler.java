@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import com.baconbao.project_service.dto.ApiResponse;
-
-
 @RestControllerAdvice
 public class CustomizedResponseEntityExceptionHandler {
 

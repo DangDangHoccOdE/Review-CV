@@ -8,14 +8,14 @@ services:
       - mongodb_data:/data/db
     restart: always
 
-  eureka-server:
-    image: eureka-server:latest
-    container_name: eureka-server
-    ports:
-      - "8761:8761"
-    environment:
-      - SERVER_PORT=8761
-    restart: always
+#  eureka-server:
+#    image: eureka-server:latest
+#    container_name: eureka-server
+#    ports:
+#      - "8761:8761"
+#    environment:
+#      - SERVER_PORT=8761
+#    restart: always
 
   profile-service:
     build: .
@@ -24,11 +24,11 @@ services:
       - "8085:8085"
     depends_on:
       - mongodb
-      - eureka-server
+#      - eureka-server
     environment:
       - SPRING_APPLICATION_NAME=profile-service
       - SERVER_PORT=8085
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/microservice-portfolio
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/portfolio
       - SPRING_SERVLET_MULTIPART_ENABLED=true
       - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
       - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB

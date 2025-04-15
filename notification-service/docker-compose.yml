@@ -1,41 +1,62 @@
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    container_name: zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - microservices_network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    container_name: kafka
+    restart: always
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - microservices_network
+
   mysql-db:
     image: mysql:8.0
     container_name: mysql_notification
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: Dang972004@
-      MYSQL_DATABASE: notification1
+      MYSQL_DATABASE: notification
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
-      - "3306:3306"
+      - "3308:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - microservices_network
 
-  eureka-server:
-    image: eurekaserver:latest  # Đảm bảo bạn có Docker image cho Eureka Server
-    container_name: eureka_server
-    ports:
-      - "8671:8671"
-    networks:
-      - microservices_network
-
   notification-service:
-    image: notification-service:latest
+    build: .
     container_name: notification_service
     restart: always
     depends_on:
       - mysql-db
-      - eureka-server
+      - kafka
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/notification1?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/notification
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8671/eureka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8084:8084"
     networks:

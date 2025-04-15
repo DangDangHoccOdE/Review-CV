@@ -1,9 +1,19 @@
 spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/portfolio
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
   application:
     name: profile-service
+
 server:
   port: 8085
+
 eureka:
   client:
-    serviceUrl:
+    service-url:
       defaultZone: http://localhost:8671/eureka

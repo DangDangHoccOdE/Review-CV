@@ -1,9 +1,32 @@
 spring:
   application:
     name: notification-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3308/notification
+    username: root
+    password: Dang972004@
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        connection:
+          characterEncoding: UTF-8
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  kafka:
+    bootstrap-servers: kafka:9092
+
+
 server:
   port: 8084
+
 eureka:
   client:
-    serviceUrl:
+    service-url:
       defaultZone: http://localhost:8671/eureka
+

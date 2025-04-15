@@ -1,11 +1,5 @@
-# Sử dụng OpenJDK 17 làm base image
-FROM openjdk:17-jdk-slim
-
-# Thiết lập thư mục làm việc bên trong container
+FROM openjdk:21-jdk-slim
 WORKDIR /app
-
-# Sao chép file JAR từ thư mục target vào container
-COPY target/notification-service.jar app.jar
-
-# Cấu hình lệnh chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY target/notification-service.jar notification-service.jar
+EXPOSE 8084
+ENTRYPOINT ["java", "-jar", "notification-service.jar"]
