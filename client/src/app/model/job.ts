@@ -6,6 +6,6 @@ export class Job {
     size?:string
     idProfilePending?:number[]
     idProfile?: number[]
-    idCompany?: number[]
+    idCompany?: number;
 }
 
