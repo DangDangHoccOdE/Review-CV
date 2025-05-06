@@ -166,18 +166,16 @@ export class UserServiceService {
     );
   }
     
-  getListUserById(id: number): Observable<User[]>{
+  getListUserById(ids: number[]): Observable<User[]> {
     const token = localStorage.getItem('authToken');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    return this.http.get<ApiResponse<User[]>>(`${this.baseURL}/getListUserById?id=${id}`,{headers}).pipe(
-      map(response =>{
-        if (response.success) {
-          return response.data;
-        } else {
-          throw new Error(response.message);
-        }
-      }),
-    )
+    return this.http.get<ApiResponse<User[]>>(`${this.baseURL}/getlistuserbyid?token=${token}&ids=${ids}`).pipe(
+        map(response => {
+            if(response.success){
+                return response.data;
+            } else {
+                throw new Error(response.message);
+            }
+        })
+    );
   }
 }
