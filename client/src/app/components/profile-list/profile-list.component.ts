@@ -40,7 +40,7 @@ export class ProfileListComponent implements OnInit {
 
 
   getAll() {
-    this.profileService.getProfileList().subscribe(data => {
+    this.profileService.getProfilesList().subscribe(data => {
       this.profiles = data;
       console.log(this.profiles);
       this.updateDisplayedProfiles();

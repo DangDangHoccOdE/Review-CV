@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Company } from '../../model/company';
+import { Component, model, OnInit } from '@angular/core';
 import { Job } from '../../model/job';
-import { Profile } from '../../model/profile';
 import { JobServiceService } from '../../service/job-service.service';
+import { CompanyServiceService } from '../../service/company-service.service';
+import { Company } from '../../model/company';
 import { ProfileServiceService } from '../../service/profile-service.service';
+import { Profile } from '../../model/profile';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotificationServiceService } from '../../service/notification-service.service';
 import { Notification } from '../../model/notification';
 
@@ -17,11 +18,11 @@ import { Notification } from '../../model/notification';
   templateUrl: './job-layout.component.html',
   styleUrl: './job-layout.component.css'
 })
-export class JobLayoutComponent implements OnInit{
-  idCompany?: number;
+export class JobLayoutComponent implements OnInit {
+  idCompany?:number;
   company: Company = new Company();
-  idJob?: number;
-  job: Job = new Job();
+  idJob?:number;
+  job: Job=new Job();
   jobs: Job[] = [];
   filteredUsers: Job[] = [];
   profilePending?: Profile[] = [];
@@ -32,17 +33,11 @@ export class JobLayoutComponent implements OnInit{
   showEditJob: boolean = false;
   isEditMode = false;
   title: string = '';
-  question: string ='';
-  searchTerm :string ='';
+  question: string = '';
+  searchTerm: string = '';
   searchCriteria: string = 'typeJob';
 
-  constructor(
-    private jobService: JobServiceService,
-    private profileService: ProfileServiceService,
-    private router: Router, 
-    private fb: FormBuilder, 
-    private notificationService: NotificationServiceService
-  ){
+  constructor(private jobService: JobServiceService, private profileService:ProfileServiceService, private router:Router, private fb:FormBuilder, private notificationService: NotificationServiceService) {
     this.jobForm = this.fb.group({
       id: [],
       title: [''],
@@ -64,13 +59,13 @@ export class JobLayoutComponent implements OnInit{
   }
 
   getJob(id:number){
-    this.jobService.getJobCompany(id).subscribe(data=>{
+    this.jobService.getJobByCompany(id).subscribe(data=>{
       this.jobs=data;
     });
   }
 
   getJobsByCompany(id:number):void{
-    this.jobService.getJobCompany(id).subscribe(data=>{
+    this.jobService.getJobByCompany(id).subscribe(data=>{
       this.jobs=data;
       this.filteredUsers = this.jobs;
       console.log(this.jobs);
@@ -88,9 +83,9 @@ export class JobLayoutComponent implements OnInit{
     console.log(job+" View Details Job");
     this.job = job;
     console.log("this.job.id "+ this.job.id);
-    console.log("this.job.idProfilePending "+ this.job.idProfilePending);
-    if(this.job.idProfilePending){
-      this.getProfileByJobPending(this.job.idProfilePending);
+    console.log("this.job.idProfilePending "+ this.job.idProfiePending);
+    if(this.job.idProfiePending){
+      this.getProfileByJobPending(this.job.idProfiePending);
     }
     this.showJob = true;
     document.body.style.overflowY = 'hidden';
@@ -131,7 +126,7 @@ export class JobLayoutComponent implements OnInit{
       this.jobService.deleteJob(id);
     } 
   }
-  
+
   acceptProfile(idProfile:number | undefined, idJob:number | undefined, size:number | undefined){
     if(idProfile && idJob){
       if(size && size>0){
@@ -198,7 +193,7 @@ export class JobLayoutComponent implements OnInit{
       description: job.description,
       typeJob: job.typeJob,
       size: job.size,
-      idProfiePending: job.idProfilePending,
+      idProfiePending: job.idProfiePending,
       idProfile: job.idProfile,
       idCompany: job.idCompany,
     });

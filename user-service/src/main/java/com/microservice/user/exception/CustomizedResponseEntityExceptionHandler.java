@@ -1,25 +1,25 @@
 package com.microservice.user.exception;
 
+
 import com.microservice.user.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 @ControllerAdvice
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
-    public final ResponseEntity<ApiResponse<String>> handleBadRequestException(BadRequestException ex, WebRequest request){
+    public final ResponseEntity<ApiResponse<String>> handleBadRequestException(BadRequestException ex, WebRequest request) {
         ApiResponse<String> response = new ApiResponse<>(
                 false,
                 ex.getMessage(),
                 ""
         );
-
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

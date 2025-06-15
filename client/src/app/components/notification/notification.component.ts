@@ -1,21 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { User } from '../../model/user';
+import { Component, OnInit } from '@angular/core'
 import { Notification } from '../../model/notification';
 import { NotificationServiceService } from '../../service/notification-service.service';
-import { not } from 'rxjs/internal/util/not';
+import { User } from '../../model/user';
+
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,],
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.css'
 })
-export class NotificationComponent implements OnInit{
+export class NotificationComponent implements OnInit {
+  
   userCurrent: User = new User();
-  notifications: Notification[] = [];
-  newNotification: Notification = new Notification();
+  notifications : Notification[] = [];
+  newNotification : Notification = new Notification();
 
   text: Notification [] = [
     {
@@ -70,37 +71,35 @@ export class NotificationComponent implements OnInit{
     }
   ];
 
-  constructor(
-    private notificationService: NotificationServiceService
-  ){}
+  constructor(private notificationService: NotificationServiceService) { }
 
-  ngOnInit() : void{
+  ngOnInit(): void {
     const userCurrentString = localStorage.getItem('userCurrent');
-    if(userCurrentString){
+    if (userCurrentString) {
       this.userCurrent = JSON.parse(userCurrentString);
     }
     if(this.userCurrent.id){
-      this.getNotificationById(this.userCurrent.id)
+      this.getNotificationById(this.userCurrent.id);
     }
+    
   }
 
-  markAsRead(notification: Notification){
+  markAsRead(notification: Notification) {
     notification.read = true;
-    this.notificationService.updateNotification(notification).subscribe(
-      data=>{
-        console.log(data)
-      }
-    )
+    this.notificationService.updateNotification(notification).subscribe(data => {
+      console.log(data);
+    });
   }
 
-  allNotificationsReadd(): boolean{
-    return this.notifications.every((notification) => notification.read)
+  allNotificationsRead(): boolean {
+    return this.notifications.every((notification) => notification.read);
   }
 
-  getNotificationById(id: number){
+  getNotificationById(id: number) {
     this.notificationService.getNotificationById(id).subscribe(data => {
       this.notifications = data;
       console.log(data);
     })
   }
+
 }

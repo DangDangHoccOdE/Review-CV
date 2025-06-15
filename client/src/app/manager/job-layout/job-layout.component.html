@@ -1,9 +1,9 @@
 <div class="container-1">
     <div class="search-navabar d-flex flex-row">
         <form class="form-inline" (submit)="onSearch()">
-            <input class="form-control mr-sm-2" type="search" [(ngModel)]="searchTerm" placeholder="search"
+            <input class="form-control mr-sm-2" type="search" [(ngModel)]="searchTerm" placeholder="Search"
                 aria-label="Search" name="searchTerm">
-            <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>        
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
         </form>
         <select class="form-select" aria-label="Default select example" [(ngModel)]="searchCriteria"
             name="searchCriteria" (change)="onCriteriaChange($event)">
@@ -41,9 +41,10 @@
 <div *ngIf="showJob" class="container company-details-window">
     <div class="window-header" (click)="closeViewJob()">
         <h3 class="window-title">Jobs & Apply</h3>
-        <button class="close-button">&times;</button>button
+        <button class="close-button">&times;</button>
     </div>
 
+    <!-- Company Information -->
     <div class="company-header">
         <div class="company-info">
             <h2>{{job.title}}</h2>
@@ -71,6 +72,7 @@
             </div>
         </div>
     </div>
+
     <ng-template #noJobsOfCompany>
         <div class="no-jobs-notification">
             <div class="no-jobs-icon">
@@ -83,7 +85,9 @@
             </div>
         </div>
     </ng-template>
+
 </div>
+
 
 <div *ngIf="option" class="modal-overlay">
     <div class="modal-window">

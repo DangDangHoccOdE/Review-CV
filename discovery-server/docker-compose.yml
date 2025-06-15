@@ -1,0 +1,17 @@
+services:
+  discovery-server:
+    image: discovery-service:latest
+    container_name: discovery-server
+    ports:
+      - "8671:8671"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SERVER_PORT=8671
+      - EUREKA_CLIENT_REGISTERWITH_EUREKA=false
+      - EUREKA_CLIENT_FETCHREGISTRY=false
+    networks:
+      - microservice-net
+
+networks:
+  microservice-net:
+    driver: bridge

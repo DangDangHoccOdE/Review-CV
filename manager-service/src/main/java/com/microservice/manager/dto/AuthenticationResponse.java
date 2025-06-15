@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
+
 public class AuthenticationResponse {
     private int statusCode;
     private String error;
@@ -13,6 +14,6 @@ public class AuthenticationResponse {
     private String refreshToken;
     private String expirationTime;
     private UserDTO user;
-    private boolean isValid;
-    private String role;
+    private boolean isVaild;
+    private  String role;
 }

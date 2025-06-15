@@ -6,6 +6,7 @@ import { Profile } from '../../model/profile';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from '../../model/user';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-profile',
@@ -20,12 +21,13 @@ export class CreateProfileComponent implements OnInit {
   selectedFile: File | null = null;
   createProfile !: boolean;
   userCurrent: User = new User();
+  previewUrl: string | ArrayBuffer | null = null;
 
   @Input() profile: Profile | undefined;
   @Input() idProfile?: number | null;
   @Output() closeForm = new EventEmitter<void>();
 
-  constructor(private fb: FormBuilder, private profileService: ProfileServiceService) {
+  constructor(private fb: FormBuilder, private profileService: ProfileServiceService,private toastr: ToastrService) {
     this.profileForm = this.fb.group({
       id: [''],
       title: ['', Validators.required],
@@ -61,18 +63,23 @@ export class CreateProfileComponent implements OnInit {
         this.profileForm.get('contact')?.patchValue(this.profile.contact);
       }
     }
-    
   }
 
 
   onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.selectedFile = fileInput.files[0];
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
     }
   }
 
-  updateProject(): void {
+  updateProfile(): void {
 
     this.createProfile = this.isCreateProfile();
     if (this.profileForm.valid) {
@@ -97,34 +104,36 @@ export class CreateProfileComponent implements OnInit {
       if (this.selectedFile) {
         formData.append('image', this.selectedFile);
       }
-      
-
-      console.log('FormData entries:');
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-      });
-      console.log('Profile form', this.profileForm.value);
+ 
       if (this.createProfile) {
-        this.profileService.createProfile(formData).subscribe(response => {
-          window.location.reload();
-        }
-        )
-      }
-      else {
-        this.profileService.updateProfile(formData).subscribe(response => {
-          console.log('Profile updated successfully', response);
-          alert('Profile updated successfully')
-          window.location.reload();
-        }, error => {
-          console.error('Error updating profile', error);
+        this.profileService.createProfile(formData).subscribe({
+          next: response => {
+            this.toastr.success('Profile created successfully', 'Success');
+            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          },
+          error: error => {
+            console.error('Error creating profile', error);
+            this.toastr.error('Failed to create profile', 'Error');
+          }
+        });
+      } else {
+        this.profileService.updateProfile(formData).subscribe({
+          next: response => {
+            this.toastr.success('Profile updated successfully', 'Success');
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          },
+          error: error => {
+            console.error('Error updating profile', error);
+            this.toastr.error('Failed to update profile', 'Error');
+          }
         });
       }
     }
-
-  }
-
-  getProfileImage(): string {
-    return this.profile?.url ? this.profile.url : 'http://res.cloudinary.com/dgts7tmnb/image/upload/v1723548301/pi41b4rynddelbwfecle.jpg';
   }
 
   onClose(): void {

@@ -1,4 +1,5 @@
 package com.microservice.image.exception;
+
 import lombok.Getter;
 import lombok.Setter;
 

@@ -8,8 +8,7 @@ import { managerRoutes } from './manager.routes';
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
-    RouterModule.forChild(managerRoutes)
+    CommonModule,RouterModule.forChild(managerRoutes)
   ]
 })
-export class ManagerRouterModule { }
+export class ManagerModule { }

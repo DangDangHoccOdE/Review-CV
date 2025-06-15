@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class CompanyDTO {
     private Integer id;
@@ -22,7 +23,7 @@ public class CompanyDTO {
     private String city;
     private String country;
     private Integer idManager;
-
+    private String url;
     private List<Integer> idHR;
     private List<Integer> idJobs;
 }

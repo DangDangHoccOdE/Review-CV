@@ -12,44 +12,50 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
+
+
+
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        // ProfileDTO có một trường typeProfile kiểu String, trong khi Profile có trường tYpeProfile kiểu TypeProfile (một enum).
-        Converter<String, TypeProfile> toTypeProfiles = new Converter<String, TypeProfile>() {
+        // Converter from String to TypeProfile
+        Converter<String, TypeProfile> toTypeProfile = new Converter<>() {
             @Override
-            public TypeProfile convert(MappingContext<String, TypeProfile> mappingContext) {
-                String source = mappingContext.getSource();
-                if(source == null || source.trim().isEmpty()) {
-                    return null;
+            public TypeProfile convert(MappingContext<String, TypeProfile> context) {
+                String source = context.getSource();
+                if (source == null || source.trim().isEmpty()) {
+                    return null; // or handle this case as per your requirement
                 }
-                try{
+                try {
                     return TypeProfile.valueOf(source);
-                }catch (IllegalArgumentException e){
-                    throw new RuntimeException("Invalid type profile: " + source);
+                } catch (IllegalArgumentException e) {
+                    throw new RuntimeException("Invalid value for TypeProfile enum: " + source);
                 }
             }
         };
 
+        // Define mapping from ProfileDTO to Profile
         modelMapper.addMappings(new PropertyMap<ProfileDTO, Profile>() {
             @Override
-            protected void configure(){
-                using(toTypeProfiles).map(source.getTypeProfile()).setTypeProfile(null);
+            protected void configure() {
+                using(toTypeProfile).map(source.getTypeProfile()).setTypeProfile(null);
             }
         });
-// Khi ánh xạ từ Profile sang ProfileDTO, cần chuyển TypeProfile thành String để giữ định dạng đúng cho DTO.
-        Converter<TypeProfile, String> toString = new Converter<TypeProfile, String>() {
+
+        // Converter from TypeProfile to String
+        Converter<TypeProfile, String> toString = new Converter<>() {
             @Override
-            public String convert(MappingContext<TypeProfile, String> mappingContext) {
-                TypeProfile source = mappingContext.getSource();
+            public String convert(MappingContext<TypeProfile, String> context) {
+                TypeProfile source = context.getSource();
                 return source == null ? null : source.name();
             }
         };
 
+        // Define mapping from Profile to ProfileDTO
         modelMapper.addMappings(new PropertyMap<Profile, ProfileDTO>() {
             @Override
-            protected void configure(){
+            protected void configure() {
                 using(toString).map(source.getTypeProfile()).setTypeProfile(null);
             }
         });

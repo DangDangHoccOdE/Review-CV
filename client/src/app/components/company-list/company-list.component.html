@@ -38,7 +38,9 @@
 
     <!-- Company Information -->
     <div class="company-header">
-        <img src="" alt="Company Logo">
+        <div class="company-logo">
+            <img [src]="company.url" alt="Company Logo">
+        </div>
         <div class="company-info">
             <h2>{{company.name}}</h2>
             <p>Type: {{company.type}}</p>

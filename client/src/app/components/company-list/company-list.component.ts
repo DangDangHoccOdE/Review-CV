@@ -1,10 +1,9 @@
-
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Company } from '../../model/company';
 import { CompanyServiceService } from '../../service/company-service.service';
+import { JobListComponent } from "../job-list/job-list.component";
 import { Router } from '@angular/router';
-import { JobListComponent } from '../job-list/job-list.component';
 
 @Component({
   selector: 'app-company-list',

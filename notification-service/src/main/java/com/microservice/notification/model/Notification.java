@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "notifications")
 @Builder
@@ -17,8 +18,8 @@ public class Notification {
     @Id
     private Integer id;
     private String message;
-    private LocalDateTime createdAt;
-    private Integer idUser;
+    private LocalDateTime createAt;
+    private  Integer idUser;
     private String url;
     private boolean isRead;
 }

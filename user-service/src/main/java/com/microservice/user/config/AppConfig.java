@@ -1,6 +1,6 @@
 package com.microservice.user.config;
 
-import com.microservice.user.dto.UserDto;
+import com.microservice.user.dto.UserDTO;
 import com.microservice.user.model.Role;
 import com.microservice.user.model.User;
 import org.modelmapper.ModelMapper;
@@ -11,11 +11,13 @@ public class AppConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        modelMapper.typeMap(User.class, UserDto.class).addMappings(mapper -> {
-            mapper.map(src -> src.getRole().name(), UserDto::setRole);
+        // Custom mapping for User to UserDTO
+        modelMapper.typeMap(User.class, UserDTO.class).addMappings(mapper -> {
+            mapper.map(src -> src.getRole().name(), UserDTO::setRole);
         });
 
-        modelMapper.typeMap(UserDto.class, User.class).addMappings(mapper -> {
+        // Custom mapping for UserDTO to User
+        modelMapper.typeMap(UserDTO.class, User.class).addMappings(mapper -> {
             mapper.map(src -> Role.valueOf(src.getRole()), User::setRole);
         });
 

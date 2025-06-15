@@ -4,8 +4,10 @@ import { ProfileServiceService } from '../../service/profile-service.service';
 import { Profile } from '../../model/profile';
 import { ProjectListComponent } from "../project-list/project-list.component";
 import { ContactComponent } from "../contact/contact.component";
+import { HttpClient } from '@angular/common/http';
 import { UserServiceService } from '../../service/user-service.service';
 import { User } from '../../model/user';
+import { filter } from 'rxjs';
 import { CreateProfileComponent } from "../create-profile/create-profile.component";
 import { CommonModule } from '@angular/common';
 import { ImageServiceService } from '../../service/image-service.service';
@@ -29,6 +31,7 @@ export class ProfileUserComponent implements OnInit {
   selectedFile: File | null = null;
   userCurrent: any;
   
+
   constructor(
     private userService: UserServiceService,
     private profileService: ProfileServiceService,
@@ -45,6 +48,7 @@ export class ProfileUserComponent implements OnInit {
     console.log('User Current String from Local Storage:', userCurrentString);
     const url = this.router.url;
     this.idProfile = this.extractIdFromUrl(url);
+    console.log('Extracted ID from URL:', this.idProfile);
     if (this.idProfile != 0 && this.idProfile) {
       this.getProfileById(this.idProfile);
     } else {
@@ -87,6 +91,7 @@ export class ProfileUserComponent implements OnInit {
     this.profileService.getProfileById(idProfile).subscribe(data => {
       this.profile = data;
       if (this.profile?.idUser) {
+        console.log("Profile ID: ", this.profile?.idUser)
         this.getUserById(this.profile?.idUser);
       }
     });

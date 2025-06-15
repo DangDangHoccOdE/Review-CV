@@ -1,6 +1,5 @@
 package com.microservice.image.exception;
 
-import com.microservice.image.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,15 +8,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.microservice.image.dto.ApiResponse;
+
 @ControllerAdvice
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public final ResponseEntity<ApiResponse<String>> handleBadRequestException(BadRequestException ex, WebRequest request) {
         ApiResponse<String> response = new ApiResponse<>(
-                false,
-                ex.getMessage(),
-                ""
+            false,
+            ex.getMessage(),
+            ""
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -25,9 +26,9 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     @ExceptionHandler(CustomException.class)
     public final ResponseEntity<ApiResponse<String>> handleCustomException(CustomException cx, WebRequest request) {
         ApiResponse<String> response = new ApiResponse<>(
-                false,
-                cx.getMessage(),
-                ""
+            false,
+            cx.getMessage(),
+            ""
         );
         return new ResponseEntity<>(response, cx.getError().getStatusCode());
     }
@@ -35,9 +36,9 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ApiResponse<String>> handleAllException(Exception e, WebRequest request) {
         ApiResponse<String> response = new ApiResponse<>(
-                false,
-                e.getMessage(),
-                ""
+            false,
+            e.getMessage(),
+            ""
         );
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -1,4 +1,5 @@
 package com.microservice.profile.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,6 @@ public class UserDTO {
     private String email;
     private String password;
     private String idEmployee;
-    private String role;
-    private boolean idActive;
+    private  String role;
+    private boolean isActive;
 }

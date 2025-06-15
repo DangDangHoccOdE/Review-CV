@@ -1,10 +1,12 @@
 package com.microservice.profile.dto;
 
-import com.microservice.profile.model.Contact;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.microservice.profile.model.Contact;
 
 @Data
 @Builder
@@ -18,8 +20,8 @@ public class ProfileDTO {
     private String skills;
     private Contact contact;
     private String typeProfile;
-    private Integer userId;
+    private Integer idUser;
     private String url;
-
+    
     private String title;
 }

@@ -1,6 +1,6 @@
 package com.microservice.manager.repository;
 
-import com.microservice.manager.model.Job;
+import com.microservice.manager.models.Job;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

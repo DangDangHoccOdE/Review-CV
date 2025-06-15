@@ -1,11 +1,11 @@
 package com.microservice.profile.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
 
 @Document(collection = "profile")
 @Data
@@ -19,10 +19,10 @@ public class Profile {
     private String education;
     private String workExperience;
     private String skills;
-    private Contact contact;
-    private TypeProfile typeProfile;
-    private Integer idImage;
+    private Contact contact; // Refers to Contact ID, if used
+    private TypeProfile typeProfile; // Enum stored as String
+    private Integer idImage; // Refers to Image ID, if used
+    private String title;
     private Integer idUser;
     private String url;
-    private String title;
 }

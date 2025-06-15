@@ -91,7 +91,7 @@ textarea{
 }
 
 .edit_profile_container .form_edit_profile .image_box .preview_box{
-   
+    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -146,6 +146,26 @@ textarea{
     font-weight: 500;
 }
 
+.edit_profile_container .form_edit_profile .contact .name_box{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+}
+
+.edit_profile_container .form_edit_profile .contact .name_box input{
+    border: 1px solid   rgb(161 161 170);
+    border-radius: 5px;
+    width: 190%;
+    box-sizing: border-box;
+    padding: 10px 20px;
+}
+.edit_profile_container .form_edit_profile .contact .name_box label{
+    font-size: 16px;
+    font-weight: 500;
+}
+
 .edit_profile_container .form_edit_profile button{
     width: 100%;
     box-sizing: border-box;
@@ -175,3 +195,4 @@ textarea{
   z-index: 9999;
   display: block; /* Mặc định ẩn */
 }
+

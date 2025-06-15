@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Company } from '../../model/company';
-import { User } from '../../model/user';
 import { CompanyServiceService } from '../../service/company-service.service';
-import { privateDecrypt } from 'crypto';
+import { Company } from '../../model/company';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { User } from '../../model/user';
 import { UserServiceService } from '../../service/user-service.service';
 
 @Component({
@@ -12,9 +12,9 @@ import { UserServiceService } from '../../service/user-service.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './company-list.component.html',
-  styleUrl: './company-list.component.css'
+  styleUrls: ['./company-list.component.css']
 })
-export class CompanyListComponent implements OnInit{
+export class CompanyListComponent implements OnInit {
   isShowingCompany: boolean = false;
   isModalOpen: boolean = false;
   companyForm!: FormGroup;
@@ -26,20 +26,22 @@ export class CompanyListComponent implements OnInit{
   modalButtonLabel: string = '';
   company?: Company;
   manager?: User | undefined;
-  managers: { [key: number]: User} = {};
+  managers: { [key: number]: User } = {};
+  previewUrl: string | ArrayBuffer | null = null;
+  selectedImageFile?: File;
 
   constructor(
     private companyService: CompanyServiceService,
     private formBuilder: FormBuilder,
-    private userService: UserServiceService
-  ){
+    private userService:UserServiceService
+  ) {
     this.userForm = this.formBuilder.group({
       id: [''],
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -55,7 +57,7 @@ export class CompanyListComponent implements OnInit{
       description: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^\+?\d{10,}$/)]],
-      address: ['',Validators.required]
+      address: ['',Validators.required],
     });
   }
 
@@ -79,6 +81,25 @@ export class CompanyListComponent implements OnInit{
     });
   }
 
+  onImageSelected(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+    const file = fileInput.files?.[0];
+
+    if (file) {
+      this.selectedImageFile = file; // lưu vào model
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result;
+      };
+      reader.readAsDataURL(this.selectedImageFile);
+    }
+  }
+
+  getAllManager(){
+
+  }
+
   editCompany(company?: Company): void {
     if (company) {
       this.companyForm.patchValue(company);
@@ -90,5 +111,81 @@ export class CompanyListComponent implements OnInit{
       }
     }
     this.isShowingCompany = true;
+  }
+
+  closeModal(): void {
+    this.isShowingCompany = false;
+    this.isModalOpen = false;
+  }
+
+  openModal(action: 'add' | 'edit', manager?: User, companyId?: number): void {
+    this.isEdit = action === 'edit';
+    this.modalTitle = this.isEdit ? 'Edit Manager' : 'Add Manager';
+    this.modalButtonLabel = this.isEdit ? 'Update Manager' : 'Add Manager';
+    if (manager) {
+      this.userForm.patchValue(manager);
+    } else {
+      this.userForm.reset();
+    }
+    if (companyId) {
+      this.idCompany = companyId; // Ensure companyId is passed and used
+    }
+    this.isModalOpen = true;
+  }
+
+  saveCompany(): void {    
+    const formData = new FormData();
+    formData.append('name', this.companyForm.get('name')?.value);
+    formData.append('type', this.companyForm.get('type')?.value);
+    formData.append('description', this.companyForm.get('description')?.value);
+    formData.append('email', this.companyForm.get('email')?.value);
+    formData.append('phone', this.companyForm.get('phone')?.value);
+    formData.append('street',this.companyForm.get('address')?.value);
+    // Nếu có ảnh được chọn
+    if (this.selectedImageFile) {
+      formData.append('image', this.selectedImageFile);
+    }
+  
+    this.companyService.createCompany(formData).subscribe(() => {
+      this.isShowingCompany = false;
+      this.initForm();
+      this.getAllCompany();
+      alert('Company details updated successfully');
+    }, error => {
+      console.error('Error saving company:', error);
+      alert('Failed to update company details.');
+    });
+  }
+  
+  onSubmit(): void {
+    if (this.userForm.valid) {
+        this.saveUser();
+    } else {
+      alert("Please fill out all required fields correctly.");
+    }
+  }
+
+  saveUser(): void {
+    const newUser: User = this.userForm.value;
+    newUser.role = 'manager'; // Ensure the role is set to manager
+    if (!newUser.name || !newUser.email || !newUser.password) {
+      alert("Please fill out all required fields!!!");
+      return;
+    }
+    if (this.idCompany) {
+      this.companyService.setManagerToCompany(newUser, this.idCompany).subscribe({
+        next: data => {
+          this.getAllCompany();
+          this.closeModal();
+          alert("User added successfully");
+        },
+        error: error => {
+          const errorMessage = error?.message;
+          if (error.status === 409 || errorMessage === 'Email already exists') {
+            this.userForm.get('email')?.setErrors({ emailExists: true });
+          }
+        }
+      });
+    }
   }
 }

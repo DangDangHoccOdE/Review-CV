@@ -1,4 +1,4 @@
-package com.microservice.email.openFeign;
+package com.microservice.email.openfeign;
 
 import com.microservice.email.dto.ApiResponse;
 import com.microservice.email.dto.UserDTO;
@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient("user-service")
 public interface UserClient {
-    @GetMapping("/auth/findById")
-    ApiResponse<UserDTO> findById(@RequestParam("id") Integer id);
+    @GetMapping("/auth/findbyid")
+    ApiResponse<UserDTO> findById(@RequestParam Integer id);
 }

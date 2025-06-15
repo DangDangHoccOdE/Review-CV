@@ -1,9 +1,6 @@
 package com.microservice.user.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,13 +26,13 @@ public class User implements UserDetails {
     private String idEmployee;
     private String password;
     private boolean isActive;
-
     @Enumerated(EnumType.STRING)
     private Role role;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
 
     @Override
     public String getPassword() {

@@ -1,7 +1,7 @@
-import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../model/project';
 import { ProjectServiceService } from '../../service/project-service.service';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-project-list',
@@ -11,7 +11,8 @@ import { ProjectServiceService } from '../../service/project-service.service';
   styleUrl: './project-list.component.css'
 })
 export class ProjectListComponent implements OnInit{
-  projects: Project[] = [];
+
+  projects:Project[]=[];
 
   project1: Project[] = [
     { id: 0, title: 'facebook', description: 'làm trang mạng xã hội về facebook', createAt: '8-8-2024' },
@@ -20,15 +21,13 @@ export class ProjectListComponent implements OnInit{
     { id: 3, title: 'X', description: 'làm trang mạng xã hội về X', createAt: '8-8-2024' }
   ];
 
-  constructor(
-    private projectService: ProjectServiceService,
-    private datePipe: DatePipe
-  ){}
+  constructor(private projectService:ProjectServiceService, private datePipe: DatePipe){}
 
   ngOnInit(): void {
     console.log("Project start");
-    this.getProjectByIdProfile(1925006690)
+    this.getProjectByIdProfile(1925006690);
   }
+
 
   getFormattedDate(createAt?:string) {
     return this.datePipe.transform(createAt, 'MMM d, y');
@@ -45,4 +44,6 @@ export class ProjectListComponent implements OnInit{
       this.projects=data;
     })
   }
+
+
 }

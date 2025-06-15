@@ -130,7 +130,7 @@
 
 .company-logo {
     flex: 0 0 30%; /* Chiếm 30% chiều rộng */
-    max-width: 30%; /* Đảm bảo không vượt quá 30% */
+    max-width: 50%; /* Đảm bảo không vượt quá 30% */
     margin-right: 20px;
 }
 

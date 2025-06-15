@@ -1,5 +1,6 @@
 package com.microservice.user.exception;
 
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -35,9 +36,17 @@ public enum Error {
     private final String message;
     private final HttpStatusCode statusCode;
 
+    /**
+     * Constructor for ErrorCode.
+     *
+     * @param code       the error code
+     * @param message    the error message
+     * @param statusCode the corresponding HTTP status code
+     */
     Error(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
         this.message = message;
         this.statusCode = statusCode;
     }
+
 }

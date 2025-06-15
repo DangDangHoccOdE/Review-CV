@@ -1,6 +1,7 @@
 package com.microservice.user.config;
 
-import com.microservice.user.security.OurUserDetailService;
+
+import com.microservice.user.security.OurUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,14 +19,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
+@Configuration
 @EnableWebSecurity
 @Slf4j
-@Configuration
 public class SecurityConfig {
+
     @Autowired
-    private OurUserDetailService ourUserDetailsService;
+    private OurUserDetailsService ourUserDetailsService;
     @Autowired
     private JwtAuthenticationFilter JwtAuthenticationFilter;
 
@@ -33,8 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**"
-                        ,"/v3/api-docs/**","/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(

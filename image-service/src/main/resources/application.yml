@@ -3,9 +3,12 @@ spring:
     name: image-service
 
   datasource:
-    url: jdbc:mysql://localhost:3309/image
-    username: user
-    password: password
+#    url: jdbc:mysql://localhost:3309/image
+    url: jdbc:mysql://localhost:3306/image
+#    username: user
+#    password: password
+    username: root
+    password: Dang972004@
 
   jpa:
     properties:

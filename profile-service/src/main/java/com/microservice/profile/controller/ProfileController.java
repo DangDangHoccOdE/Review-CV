@@ -1,10 +1,14 @@
 package com.microservice.profile.controller;
 
 import com.microservice.profile.dto.ApiResponse;
+import com.microservice.profile.dto.BooleanDTO;
 import com.microservice.profile.dto.ProfileDTO;
+import com.microservice.profile.model.Profile;
 import com.microservice.profile.model.TypeProfile;
-import com.microservice.profile.service.inter.ProfileService;
+import com.microservice.profile.services.service.ProfileService;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,42 +25,42 @@ public class ProfileController {
     private ProfileService profileService;
 
     @PostMapping("/user/save")
-    public ResponseEntity<ApiResponse<ProfileDTO>> save(@ModelAttribute ProfileDTO profileDTO, @RequestPart(value = "image", required = false)MultipartFile image) {
-        ProfileDTO resultProfileDTO = profileService.saveProfile(profileDTO, image);
+    public ResponseEntity<ApiResponse<ProfileDTO>> save(@ModelAttribute ProfileDTO profileDTO, @RequestPart(value="image",required = false)MultipartFile image) {
+        ProfileDTO resultProfileDTO = profileService.saveProfile(profileDTO,image);
         return ResponseEntity.ok(new ApiResponse<>(true, "Profile saved successfully", resultProfileDTO));
     }
 
     @PostMapping(value = "/user/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<ProfileDTO>> update(@ModelAttribute ProfileDTO profileDTO, @RequestPart(value = "image", required = false)MultipartFile image) {
+    public ResponseEntity<ApiResponse<ProfileDTO>> update(@ModelAttribute ProfileDTO profileDTO, @RequestPart(value="image",required = false)MultipartFile image) {
         log.info("ProfileDTO: {}", profileDTO);
-        log.info("image: {}", image);
-        ProfileDTO resultProfileDTO = profileService.updateProfile(profileDTO, image);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Profile updated successfully", resultProfileDTO));
+        log.info("iamge :{}", image);
+        ProfileDTO resultProfileDTO = profileService.updateProfile(profileDTO,image);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Profile update successfully", resultProfileDTO));
     }
 
-    @GetMapping("/user/findProfileType")
-    public ResponseEntity<ApiResponse<List<ProfileDTO>>> findProfileType(@RequestParam String typeProfile) {
+    @GetMapping("/user/findProfileByType")
+    public ResponseEntity<ApiResponse<List<ProfileDTO>>> findProfilesByType(@RequestParam String typeProfile) {
         List<ProfileDTO> resultProfiles = profileService.findProfilesByType(TypeProfile.valueOf(typeProfile));
-        return ResponseEntity.ok(new ApiResponse<>(true, "Profiles found", resultProfiles));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Find Profile By Type", resultProfiles));
     }
 
     @GetMapping("/user/getAll")
     public ResponseEntity<ApiResponse<List<ProfileDTO>>> getAll() {
-        List<ProfileDTO> resultProfiles = profileService.findAllProfiles();
+        List<ProfileDTO> resultProfiles = profileService.getAllProfile();
         return ResponseEntity.ok(new ApiResponse<>(true, "Get all is successfully", resultProfiles));
     }
-
     @GetMapping("/user/findById")
-    public ResponseEntity<ApiResponse<ProfileDTO>> findById(@RequestParam Integer id) {
-        ProfileDTO resultProfileDTO = profileService.findById(id);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Find by id is successfully", resultProfileDTO));
+    public ResponseEntity<ApiResponse<ProfileDTO>> getProfileById(@RequestParam Integer id) {
+        ProfileDTO profileDTO = profileService.findById(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Find by id is successfully", profileDTO));
     }
-
+    
     @GetMapping("/user/findByUserId")
     public ResponseEntity<ApiResponse<ProfileDTO>> findByUserId(@RequestParam Integer userId) {
-        ProfileDTO resultProfileDTO = profileService.findByIdUser(userId);
-        if(resultProfileDTO != null) {
-            return ResponseEntity.ok(new ApiResponse<>(true,"Find by user id is successfully", resultProfileDTO));
+        ProfileDTO resultProfiles = profileService.findByIdUser(userId);
+        System.out.println("Profile: "+ resultProfiles);
+        if(resultProfiles!=null){
+            return ResponseEntity.ok(new ApiResponse<>(true, "Find by user id is successfully", resultProfiles));
         }
         return ResponseEntity.ok(new ApiResponse<>(false, "Profile not found", null));
     }
@@ -66,17 +70,17 @@ public class ProfileController {
         List<ProfileDTO> resultProfiles = profileService.findByTitle(title);
         return ResponseEntity.ok(new ApiResponse<>(true, "Find by title is successfully", resultProfiles));
     }
-
+    
     @GetMapping("/user/checkIdProfile")
-    public ResponseEntity<ApiResponse<String>> checkIdProfile(@RequestParam Integer id) {
+    public ResponseEntity<ApiResponse<String>> checkIdProfie(@RequestParam Integer id) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Check id profile", "true"));
     }
 
     @GetMapping("/manager/getProfileByIdPendingJob")
     public ResponseEntity<ApiResponse<List<ProfileDTO>>> getProfileByIdPendingJob(@RequestParam List<Integer> ids) {
-        List<ProfileDTO> resultProfiles = profileService.findListProfileIdPendingJob(ids);
+        List<ProfileDTO> resultProfiles = profileService.findListProfileByIdPendingJob(ids);
         return ResponseEntity
                 .ok(new ApiResponse<>(true, "Profiles retrieved successfully by pending job id", resultProfiles));
-    }
+    } 
 
 }

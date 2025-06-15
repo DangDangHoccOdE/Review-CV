@@ -1,15 +1,19 @@
+import { ManagerModule } from './manager-router/manager.module';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { CreateProfileComponent } from './components/create-profile/create-profile.component';
 import { ProfileListComponent } from './components/profile-list/profile-list.component';
-import { ProfileUserComponent } from './components/profile-user/profile-user.component';
-import { JobListComponent } from './components/job-list/job-list.component';
-import { JobDetailsComponent } from './components/job-details/job-details.component';
 import { ProjectListComponent } from './components/project-list/project-list.component';
-import { UserComponent } from './components/user/user.component';
+import { ProfileUserComponent } from './components/profile-user/profile-user.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { UserComponent } from './components/user/user.component';
+import { JobDetailsComponent } from './components/job-details/job-details.component';
+import { CompanyListComponent } from './components/company-list/company-list.component';
+import { JobListComponent } from './components/job-list/job-list.component';
+
+
 
 export const routes: Routes = [
     {
@@ -34,7 +38,7 @@ export const routes: Routes = [
                 component:ProfileListComponent
             },
             {
-                path: 'profile-user/:id?',
+                path: 'profile-user/:id',
                 component: ProfileUserComponent
             }
         ]
@@ -69,6 +73,9 @@ export const routes: Routes = [
     },
     {
         path: 'manager',
-        loadChildren: () => import('./manager-router/manager.module').then(m => m.ManagerRouterModule)
+        loadChildren: () => import('./manager-router/manager.module').then(m => m.ManagerModule)
     }
+
+
+
 ];

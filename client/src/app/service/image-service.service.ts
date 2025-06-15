@@ -1,18 +1,45 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Apiresponse } from '../apiresponse';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { ApiResponse } from '../response/apiresponse';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageServiceService {
+
   private baseURL="http://localhost:8080/image"
-  constructor(
-    private http:HttpClient
-    ,private router:Router
-  ) { }
+  constructor(private http:HttpClient,private router:Router) { }
+  
+
+  uploadImage(image: File): Observable<any> {
+    const headers = this.createAuthorizationHeader();
+    const formData = new FormData();
+    formData.append('imageFile', image);
+    console.log('Form Data:', formData.get('imageFile')); 
+    return this.http.post<Apiresponse<any>>(`${this.baseURL}/save`,formData, { headers }).pipe(
+      map(response => {
+        if(response.success){
+          return response.data;
+        }else{
+          throw new Error(response.message);
+        }
+      }),
+      catchError(
+        error => {
+          if (error instanceof HttpErrorResponse && error.status === 401) {
+            console.error('Unauthorized:', error);
+            this.router.navigate(['/login']);
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userCurrent');
+          }
+          console.error('Error fetching profiles:', error);
+          return throwError(() => new Error('Something went wrong!'));
+        }
+      )
+    );
+  }
 
   private createAuthorizationHeader(): HttpHeaders {
     const token = localStorage.getItem('authToken');
@@ -27,32 +54,4 @@ export class ImageServiceService {
     return new HttpHeaders();
   }
 
-  uploadImage(image: File): Observable<any>{
-    const headers = this.createAuthorizationHeader();
-    const formData = new FormData();
-    formData.append('imageFile', image);
-
-    console.log('Form Data: ', formData.get('imageFile'));
-    return this.http.post<ApiResponse<any>>(`${this.baseURL}/save`, formData, {headers}).pipe(
-      map(response => {
-        if(response.success){
-          return response.data;
-        }else{
-          throw new Error(response.message);
-        }
-      }),
-    catchError(
-      error => {
-        if(error instanceof HttpErrorResponse && error.status === 401){
-          console.error("Unauthorized: ",error);
-          this.router.navigate(['/login']);
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('userCurrent');
-        }
-        console.error('Error fetching profiles:', error);
-        return throwError(() => new Error('Something went wrong!'));
-      }
-    )      
-    )
-  }
 }

@@ -1,5 +1,4 @@
 package com.microservice.email.config;
-
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +14,9 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
-    @Bean // Tạo Kafka Consumer với các cấu hình cần thiết.
-    public ConsumerFactory<String,String> consumerFactory() {
+
+    @Bean
+    public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "email-service-group");
@@ -25,8 +25,8 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean // Tạo một listener để nhận message từ Kafka Topic.
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(){
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;

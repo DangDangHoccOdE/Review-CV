@@ -1,8 +1,11 @@
 import { Routes } from "@angular/router";
 import { AdminLayoutComponent } from "../layouts/admin-layout/admin-layout.component";
 import { UserListComponent } from "../layouts/user-list/user-list.component";
-import { CompanyListComponent } from "../components/company-list/company-list.component";
+import { ProjectListComponent } from "../layouts/project-list/project-list.component";
+import { CompanyListComponent } from "../layouts/company-list/company-list.component";
 import { LoginComponent } from "../components/login/login.component";
+
+
 
 export const adminRoutes: Routes = [
     {
@@ -23,4 +26,5 @@ export const adminRoutes: Routes = [
         path: 'login',
         component: LoginComponent
     }
-]
+
+];

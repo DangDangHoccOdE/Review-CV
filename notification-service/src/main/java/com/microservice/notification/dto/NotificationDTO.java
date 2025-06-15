@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 public class NotificationDTO {
     private Integer id;
     private String message;
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
     private String url;
     private boolean isRead;
-    private Integer isUser;
+    private Integer idUser;
 }

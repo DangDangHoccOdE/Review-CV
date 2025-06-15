@@ -9,6 +9,7 @@ import { ProfileListComponent } from '../profile-list/profile-list.component';
 import { CompanyListComponent } from '../company-list/company-list.component';
 import { JobListComponent } from "../job-list/job-list.component";
 import { UserServiceService } from '../../service/user-service.service';
+import { User } from '../../model/user';
 
 @Component({
   selector: 'app-home',
@@ -24,9 +25,10 @@ export class HomeComponent implements OnInit {
   @Input() param?: string;
   constructor(private userService: UserServiceService,private profileService: ProfileServiceService) {
 
-  }
+   }
   
-  ngOnInit(): void {
+   ngOnInit(): void {
+    console.log("asdhashndjasnbjdna")
     this.getCurrentUser();
   }
   
@@ -52,7 +54,7 @@ export class HomeComponent implements OnInit {
   }
   
   getAll() {
-    this.profileService.getProfileList().subscribe(data => {
+    this.profileService.getProfilesList().subscribe(data => {
       this.profiles = data;
     })
   }

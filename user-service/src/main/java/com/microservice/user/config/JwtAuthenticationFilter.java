@@ -1,6 +1,7 @@
 package com.microservice.user.config;
 
-import com.microservice.user.security.OurUserDetailService;
+
+import com.microservice.user.security.OurUserDetailsService;
 import com.microservice.user.utils.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
-    private OurUserDetailService ourUserDetailsService;
+    private OurUserDetailsService ourUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

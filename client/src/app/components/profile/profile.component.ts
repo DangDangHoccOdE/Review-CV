@@ -1,4 +1,3 @@
-
 import { Component, Input, OnInit } from '@angular/core';
 import { ContactComponent } from '../contact/contact.component';
 import { CreateProfileComponent } from '../create-profile/create-profile.component';
@@ -10,6 +9,7 @@ import { Project } from '../../model/project';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ProjectListComponent } from '../project-list/project-list.component';
 import { ProfileListComponent } from '../profile-list/profile-list.component';
+import { User } from '../../model/user';
 
 
 @Component({
@@ -26,17 +26,24 @@ export class ProfileComponent implements OnInit{
   id?:number;
   profile: Profile = new Profile;
   projects: Project[] = [];
+  userCurrent: User = new User();
   
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.param = +params['id'];
-        //this.getProfileById(this.param);
-      } else {
-        this.id = 810437498; // default value or logic
-        this.getProfileById(this.id);
-      }
-    });
+    const idProfile = localStorage.getItem('idProfileUser');
+
+    if(idProfile){
+      this.getProfileById(Number(idProfile));
+    }
+    // this.route.params.subscribe(params => {
+    //   console.log("Route params:", params);
+    //   if (params['id']) {
+    //     this.param = +params['id'];
+    //     this.getProfileById(this.param);
+    //   } else {
+    //     this.id = 810437498; // default value or logic
+    //     this.getProfileById(this.id);
+    //   }
+    // });
   }
 
   /* getByUser(id: number) {

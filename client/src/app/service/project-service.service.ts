@@ -1,99 +1,96 @@
-import { ApiResponse } from './../response/apiresponse';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Project } from '../model/project';
 import { map, Observable } from 'rxjs';
+import { Project } from '../model/project';
+import { Apiresponse } from '../apiresponse';
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectServiceService {
-  private baseUrl = 'http://localhost:8080/project/user';
-  constructor(
-    private http: HttpClient,
-  ) {}
+  private baseURL = 'http://localhost:8080/project/user/';
 
-  getProjectByUser(id: number):Observable<Project[]>{
+  constructor(private http:HttpClient) { }
+
+  getProjectByUser(id:number):Observable<Project[]>{
     const headers = this.createAuthorizationHeader();
-    return this.http.get<ApiResponse<Project[]>>('http://localhost:8088/project/getByUser', { headers })
+    return this.http.get<Apiresponse<Project[]>>(`http://localhost:8080/project/user/getProject?id=${id}`, {headers})
     .pipe(map(response=>{
       if(response.success){
         return response.data;
-    }else{
-      throw new Error(response.message);
-    }
+      }
+      else{
+        throw new Error(response.message);
+      }
     }));
   }
 
-  convertToProject(project: any): Project{
-    return{
-      id: project.id,
-      title: project.title,
-      description: project.description,
-      createAt: project.createAt,
-      url: project.url,
-      display: project.display,
-      idProfile: project.idProfile,
-    }
+  getProjectByIdProfile(id?:number):Observable<Project[]>{
+    const headers = this.createAuthorizationHeader();
+    return this.http.get<Apiresponse<Project[]>>(`${this.baseURL}getProject?id=${id}`, {headers}).pipe(
+      map(response=>{
+        if(response.success){
+          return response.data.map(this.mapToProject);
+        }
+        else{
+          throw new Error(response.message);
+        }
+      }));
   }
 
-  createProjectByUser(project: Project): Observable<Project> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-
+  conventToProject(project :any):Project{
+      return {
+        id:project.id,
+        title:project.title,
+        description:project.description,
+        createAt:project.createAt,
+        url:project.url,
+        display:project.display,
+        idProfile:project.idProfile
+      }
+  }
+  createProjectByUser(project:Project):Observable<Project>{
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const authHeaders = this.createAuthorizationHeader();
-    if(authHeaders.has('Authorization')){
-      headers = headers.set('Authorization', authHeaders.get('Authorization')!);
+    if (authHeaders.has('Authorization')) {
+        headers = headers.set('Authorization', authHeaders.get('Authorization')!);
     }
-    return this.http.post<ApiResponse<Project>>(`${this.baseUrl}save`, project, { headers })
-    .pipe(map(response => {
-      if (response.success) {
-        return response.data;
-      } else {
-        throw new Error(response.message);
-      }
-    }
-    ));
+    return this.http.post<Apiresponse<Project>>(`${this.baseURL}save`, project, { headers }).pipe(
+      map(response => {
+        if (response.success) {
+          return response.data;
+        } else {
+          throw new Error(response.message);
+        }
+      })
+    );
   }
 
-  updateProjectByUser(project: Project): Observable<Project> {
+  updateProjectByUser(project:Project):Observable<Project>{
     const headers = this.createAuthorizationHeader();
-    return this.http.post<ApiResponse<Project>>(`${this.baseUrl}update`, project, { headers })
-    .pipe(map(response => {
-      if (response.success) {
-        return this.mapToProject(response.data);
-      } else {
-        throw new Error(response.message);
-      }
-    }
-    ));
+    return this.http.post<Apiresponse<Project>>(`${this.baseURL}update`,project, {headers}).pipe(
+      map(response=>{
+        if(response.success){
+          return this.mapToProject(response.data);
+        }
+        else{
+          throw new Error(response.message);
+        }
+      }));
   }
 
-  deleteProjectByUser(id?: number): Observable<Project> {
+  deleteProjectByUser(id?:number):Observable<string>{
     const headers = this.createAuthorizationHeader();
-    return this.http.delete<ApiResponse<Project>>(`${this.baseUrl}delete?id=${id}`, { headers })
-    .pipe(map(response => {
-      if (response.success) {
-        return response.data;
-      } else {
-        throw new Error(response.message);
-      }
-    }
-    ));
-  }
-
-  getProjectByIdProfile(id?: number): Observable<Project[]> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.get<ApiResponse<Project[]>>(`${this.baseUrl}getProject?id=${id}`, { headers })
-    .pipe(map(response => {
-      if (response.success) {
-        return response.data.map(this.mapToProject);
-      } else {
-        throw new Error(response.message);
-      }
-    }
-    ));
+    return this.http.delete<Apiresponse<string>>(`${this.baseURL}delete/${id}`, {headers}).pipe(
+      map(response => {
+        if (!response.success) {
+          throw new Error(response.message);
+        }else{
+          return response.data;
+        }
+      })
+    );
   }
 
   private createAuthorizationHeader(): HttpHeaders {

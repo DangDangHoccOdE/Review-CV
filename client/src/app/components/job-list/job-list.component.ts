@@ -40,7 +40,6 @@ export class JobListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("staảto bj ");
     const userCurrentString = localStorage.getItem('userCurrent');
     if (userCurrentString) {
       this.userCurrent = JSON.parse(userCurrentString);
@@ -53,12 +52,10 @@ export class JobListComponent implements OnInit {
       this.getNewJob(this.idProfileNumber);
       this.getJobPending(this.idProfileNumber);
       this.getJobAccepted(this.idProfileNumber);
-      console.log(this.idProfileNumber+" new")
     }
   }
 
   getJobs(): void {
-    console.log("getJobs");
     this.jobService.getAllJobs().subscribe(data => {
       this.newJobs = data;
       this.updateDisplayedProfiles();
@@ -66,7 +63,7 @@ export class JobListComponent implements OnInit {
   }
 
   getJobsByIdCompany(id:number): void{
-    this.jobService.getJobCompany(id).subscribe(data=>{
+    this.jobService.getJobByCompany(id).subscribe(data=>{
       this.jobs=data;
     })
   }
@@ -103,6 +100,14 @@ export class JobListComponent implements OnInit {
       this.jobService.applyJobs(idJob, this.idProfileNumber).subscribe(data => {
         if(data){
           alert("Job applied successfully");
+          if(this.idCompany){
+            this.getJobsByIdCompany(this.idCompany);
+          }
+          if(this.idProfileNumber !== undefined){
+            this.getNewJob(this.idProfileNumber);
+            this.getJobPending(this.idProfileNumber);
+            this.getJobAccepted(this.idProfileNumber);
+          }
         }
     })
     }

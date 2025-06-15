@@ -1,4 +1,5 @@
 package com.microservice.user.model;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

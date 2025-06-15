@@ -2,10 +2,10 @@ package com.microservice.profile.exception;
 
 import org.springframework.http.HttpStatusCode;
 
-public class CustomException extends RuntimeException {
-    private final Error error;
+public class CustomException extends RuntimeException{
+    private  final Error error;
 
-    public CustomException(Error error) {
+    public CustomException(Error error){
         super(error.getMessage());
         this.error = error;
     }
@@ -22,5 +22,5 @@ public class CustomException extends RuntimeException {
     public HttpStatusCode getHttpStatusCode(){
         return error.getStatusCode();
     }
-}
 
+}

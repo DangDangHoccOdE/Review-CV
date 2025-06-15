@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class MessageDTO {
-    private String message;
-    private Integer id;
+    private  String message;
+    private  Integer id;
 }

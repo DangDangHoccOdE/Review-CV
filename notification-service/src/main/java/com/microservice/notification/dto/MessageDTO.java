@@ -3,9 +3,9 @@ package com.microservice.notification.dto;
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
 @Data
+@Builder
 public class MessageDTO {
-    private String message;
-    private Integer id;
+    private  String message;
+    private  Integer id;
 }

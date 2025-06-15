@@ -11,5 +11,5 @@ export class Company {
     idManager?:number;
     idHR?:number[];
     idJobs?:number[];
-    image?:File;
+    url?:File;
 }
