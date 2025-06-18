@@ -1,50 +1,52 @@
-<div class="service px-4 py-5 section-padding" id="contact_us">
-    <div class="titie-row row mb-3">
-        <h2 class="fw-bolder">Contact Us</h2>
-        <p>You can contact me.</p>
+<div class="service px-4 py-5 section-padding bg-light" id="contact_us">
+  <div class="container">
+    <!-- Title -->
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Contact Us</h2>
+      <p class="text-muted">You can contact me anytime.</p>
+      <hr class="mx-auto" style="width: 60px; height: 3px; background-color: #007bff; opacity: 1;" />
     </div>
-    <div class="contact-row m-0 mt-5 row">
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="shadow-md row p-4 m-0 rounded bg-white">
-                <div class="col-md-3 text-center align-self-center">
-                    <i class="bi fs-1 bi-headphones"></i>
-                </div>
-                <div class="col-md-9">
-                    <h6 class="fs-7 fw-bolder">Phone</h6>
-                    <ul>
-                        <li>{{contact?.phone}}</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="shadow-md row p-4 m-0 rounded bg-white">
-                <div class="col-md-3 text-center align-self-center">
-                    <i class="bi fs-1 bi-headphones"></i>
-                </div>
-                <div class="col-md-9">
-                    <h6 class="fs-7 fw-bolder">Email</h6>
-                    <ul>
-                        <li>{{contact?.email}}</li>
-                    </ul>
-                </div>
-            </div>
+    <!-- Contact Info Boxes -->
+    <div class="row justify-content-center g-4">
+      <!-- Phone -->
+      <div class="col-lg-4 col-md-6">
+        <div class="bg-white shadow-sm rounded p-4 d-flex align-items-center">
+          <div class="me-3 text-primary fs-1">
+            <i class="bi bi-telephone-fill"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">Phone</h6>
+            <p class="mb-0 text-muted">{{ contact?.phone }}</p>
+          </div>
         </div>
+      </div>
 
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="shadow-md row p-4 m-0  rounded bg-white">
-                <div class="col-md-3 text-center align-self-center">
-                    <i class="bi fs-1 bi-headphones"></i>
-                </div>
-                <div class="col-md-9">
-                    <h6 class="fs-7 fw-bolder">Address</h6>
-                    <ul>
-                        <li>{{contact?.address}}</li>
-                    </ul>
-                </div>
-            </div>
+      <!-- Email -->
+      <div class="col-lg-4 col-md-6">
+        <div class="bg-white shadow-sm rounded p-4 d-flex align-items-center">
+          <div class="me-3 text-success fs-1">
+            <i class="bi bi-envelope-fill"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">Email</h6>
+            <p class="mb-0 text-muted">{{ contact?.email }}</p>
+          </div>
         </div>
+      </div>
 
+      <!-- Address -->
+      <div class="col-lg-4 col-md-6">
+        <div class="bg-white shadow-sm rounded p-4 d-flex align-items-center">
+          <div class="me-3 text-danger fs-1">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">Address</h6>
+            <p class="mb-0 text-muted">{{ contact?.address }}</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

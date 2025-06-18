@@ -103,7 +103,6 @@ export class UserServiceService {
     return this.http.get<Apiresponse<User>>(this.baseURL+"/getCurrentUser").pipe(
       map(response => {
         if(response.success){
-          console.log("Current User: ", response.success)
           return response.data;
         }else{
           throw new Error(response.message);

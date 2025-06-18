@@ -30,7 +30,6 @@ export class ProfileComponent implements OnInit{
   
   ngOnInit(): void {
     const idProfile = localStorage.getItem('idProfileUser');
-
     if(idProfile){
       this.getProfileById(Number(idProfile));
     }
@@ -54,7 +53,7 @@ export class ProfileComponent implements OnInit{
   getProfileById(id:number){
     this.profileService.getProfileById(id).subscribe(data=>{
       this.profile=data;
-      this.getProjectByIdProfile(this.id);
+      this.getProjectByIdProfile(id);
     })
   }
 

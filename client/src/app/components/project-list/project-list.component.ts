@@ -6,6 +6,9 @@ import { RouterOutlet } from '@angular/router';
 import { PostProjectComponent } from "../post-project/post-project.component";
 import { Profile } from '../../model/profile';
 import { ProfileServiceService } from '../../service/profile-service.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-project-list',
@@ -24,18 +27,18 @@ export class ProjectListComponent implements OnInit {
   profile?: Profile;
   @Input() idProfile?:number | null;
 
-  constructor(private projectService:ProjectServiceService, private datePipe: DatePipe,private profileService:ProfileServiceService){}
+  constructor(private projectService:ProjectServiceService,    public router: Router, private datePipe: DatePipe,private profileService:ProfileServiceService, private toastr: ToastrService){}
 
   ngOnInit(): void {
     const userCurrentString = localStorage.getItem('userCurrent');
     if (userCurrentString) {
       this.userCurrent = JSON.parse(userCurrentString);
     }
-    const idProfile = localStorage.getItem('idProfile');
-    if(idProfile){
-      this.getProjectByIdProfile(Number(idProfile));
-      // this.getProfileById(Number(idProfile))
+    if(this.idProfile){
+      console.log("Tìm theo id profile: ", this.idProfile)
+      this.getProjectIsDisplayByIdProfile(Number(this.idProfile));
     }else{
+      console.log("Tìm theo id user")
       this.getProfileByIdUser(this.userCurrent.id);
     }
   }
@@ -46,7 +49,6 @@ export class ProjectListComponent implements OnInit {
 
   getProjectByUser(id:number){
     this.projectService.getProjectByUser(id).subscribe(data=>{
-      console.log("Project: ", data)
       this.projects=data
       this.isCurrentUserProfile();
     })
@@ -54,8 +56,8 @@ export class ProjectListComponent implements OnInit {
 
   getProfileByIdUser(id:number){
     this.profileService.getProfileByUserId(id).subscribe(data=>{
-      console.log("Profile by user ID:", data);
       this.profile=data;
+      this.idProfile = data.id
       if(this.profile.id)
       {
         this.getProjectByIdProfile(this.profile.id);
@@ -65,13 +67,18 @@ export class ProjectListComponent implements OnInit {
 
   getProjectByIdProfile(id:number){
     this.projectService.getProjectByIdProfile(id).subscribe(data=>{
-      console.log("Projects: ", data)
       this.projects=data;
     })
   }
+
+  getProjectIsDisplayByIdProfile(id:number){
+    this.projectService.getProjectByIdProfile(id).subscribe(data=>{
+      this.projects = data.filter(project => project.display);
+    })
+  }
+
   getProfileById(idProfile: number) {
     this.profileService.getProfileById(idProfile).subscribe(data => {
-      console.log("Profile data:", data);
       this.profile = data;
       if(this.profile.idUser)
       {
@@ -81,21 +88,44 @@ export class ProjectListComponent implements OnInit {
   }
 
   deleteProject(project:Project){
-    this.projectService.deleteProjectByUser(project.id).subscribe(data=>{
-      if(data){
-        console.log(data);
-        alert('Delete project successfully');
-        this.getProjectByIdProfile(this.idProfile!);
+    Swal.fire({
+      title: "Are you sure you want to delete the project?",
+      text: `Project: ${project.title}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6'
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.projectService.deleteProjectByUser(project.id).subscribe(data=>{
+        if(data){
+          Swal.fire('Deleted','Delete project successfully','success')
+          this.getProjectByIdProfile(this.idProfile!);
+
+          setTimeout(() => {
+            const userCurrentString = localStorage.getItem('userCurrent');
+            if (userCurrentString) {
+              this.userCurrent = JSON.parse(userCurrentString);
+            }
+
+            if (this.idProfile) {
+              this.getProjectByIdProfile(Number(this.idProfile));
+            } else {
+              this.getProfileByIdUser(this.userCurrent.id);
+            }
+          }, 1000);
+        }
+        })
       }
     })
   }
 
   showEditForm(project:Project | null): void {
-    console.log(project?.title);
     this.selectedProject = project;
     this.isFormVisible = true;
   }
-
 
   hideEditForm(): void {
     this.selectedProject = null; 
@@ -103,6 +133,9 @@ export class ProjectListComponent implements OnInit {
   }
 
   isCurrentUserProfile(): boolean {
+    console.log("Tìm theo id profile123123123: ", this.idProfile)
+    console.log("Id profiel: ", this.profile?.idUser)
+    console.log("Current:" , this.userCurrent.id)
     return this.profile?.idUser === this.userCurrent?.id;
   }
 

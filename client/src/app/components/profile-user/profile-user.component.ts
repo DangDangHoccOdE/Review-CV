@@ -31,7 +31,6 @@ export class ProfileUserComponent implements OnInit {
   selectedFile: File | null = null;
   userCurrent: any;
   
-
   constructor(
     private userService: UserServiceService,
     private profileService: ProfileServiceService,
@@ -45,10 +44,11 @@ export class ProfileUserComponent implements OnInit {
     if (userCurrentString) {
       this.userCurrent = JSON.parse(userCurrentString);
     }
-    console.log('User Current String from Local Storage:', userCurrentString);
     const url = this.router.url;
+
+    // trường hợp lấy id theo id profile trên url
     this.idProfile = this.extractIdFromUrl(url);
-    console.log('Extracted ID from URL:', this.idProfile);
+
     if (this.idProfile != 0 && this.idProfile) {
       this.getProfileById(this.idProfile);
     } else {
@@ -91,7 +91,6 @@ export class ProfileUserComponent implements OnInit {
     this.profileService.getProfileById(idProfile).subscribe(data => {
       this.profile = data;
       if (this.profile?.idUser) {
-        console.log("Profile ID: ", this.profile?.idUser)
         this.getUserById(this.profile?.idUser);
       }
     });
@@ -100,7 +99,6 @@ export class ProfileUserComponent implements OnInit {
   getProfileByUserId(userId: number): void {
     this.profileService.getProfileByUserId(userId).subscribe(data => {
       this.profile = data;
-      console.log(this.profile + "  PFby id");
       if (this.profile?.idUser) {
         this.getUserById(this.profile?.idUser);
       }
@@ -110,13 +108,11 @@ export class ProfileUserComponent implements OnInit {
   getUserById(idUser: number) {
     this.userService.getUserById(idUser).subscribe(data => {
       this.user = data;
-      console.log(this.user + " by id");
     });
   }
 
   showEditForm() {
     this.formEditProfile = true;
-    console.log(this.profile);
     document.body.style.overflowY = 'hidden';
     document.body.style.touchAction = 'none';
   }
@@ -126,7 +122,6 @@ export class ProfileUserComponent implements OnInit {
     document.body.style.overflowY = '';
     document.body.style.touchAction = '';
   }
-
 
   scrollToSection(sectionId: string): void {
     const section = document.getElementById(sectionId);

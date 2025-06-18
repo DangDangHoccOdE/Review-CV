@@ -12,6 +12,7 @@ import { UserComponent } from './components/user/user.component';
 import { JobDetailsComponent } from './components/job-details/job-details.component';
 import { CompanyListComponent } from './components/company-list/company-list.component';
 import { JobListComponent } from './components/job-list/job-list.component';
+import { AccessDeniedComponent } from './pages/access-denied/access-denied.component';
 
 
 
@@ -74,8 +75,11 @@ export const routes: Routes = [
     {
         path: 'manager',
         loadChildren: () => import('./manager-router/manager.module').then(m => m.ManagerModule)
+    },
+    {
+    path: 'access-denied',
+    component: AccessDeniedComponent
     }
-
 
 
 ];

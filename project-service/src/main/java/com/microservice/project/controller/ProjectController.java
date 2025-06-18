@@ -55,6 +55,7 @@ public class ProjectController {
         ApiResponse<ImageDTO> response = new ApiResponse<>(true, "ok", projectService.getall(image));
         return ResponseEntity.ok(response);
     }
+
     @GetMapping("/user/get1")
     public ResponseEntity<ApiResponse<String>> get1() {
         ApiResponse<String> response = new ApiResponse<>(true, "ok", imageClient.getAll().getData());

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProjectServiceService } from '../../service/project-service.service';
 import { Project } from '../../model/project';
-import { title } from 'process';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-post-project',
@@ -21,7 +21,7 @@ export class PostProjectComponent implements OnInit {
   @Input() projectEdit: Project | null = null;
   @Input() idProfile?: number | null;
   @Output() closeForm = new EventEmitter<void>();
-  constructor(private projectService:ProjectServiceService, private fb:FormBuilder, private router: Router){
+  constructor(private projectService:ProjectServiceService, private fb:FormBuilder, private router: Router, private toastr: ToastrService){
     this.projectForm = this.fb.group({
       id: [''],
       title: [''],
@@ -34,16 +34,19 @@ export class PostProjectComponent implements OnInit {
       idProfile: [this.idProfile]
     })
   }
+
   ngOnInit(): void {
     if(this.projectEdit!=null){
       this.projectForm.patchValue(this.projectEdit)
     }
   }
+
   createProjectByUser(project:Project){
     this.projectService.createProjectByUser(project).subscribe(data=>{
       this.project=data
     })
   }
+
   updateProjectByUser(project:Project){
     this.projectService.updateProjectByUser(project).subscribe(data=>{
       this.project=data
@@ -57,42 +60,41 @@ export class PostProjectComponent implements OnInit {
       if (this.idProfile !== null && this.idProfile !== undefined) {
         this.updateProject.idProfile = this.idProfile;
     }
-      console.log("Id Profile: ", this.idProfile)
-      console.log(JSON.stringify(this.updateProject) + " ID project");
-      console.log(this.updateProject?.id + " ID project");
       if(this.updateProject?.id){
         this.projectService.updateProjectByUser(this.updateProject).subscribe({
         next: (response) => {
-          alert('Project updated successfully');
-          this.router.navigate(['/list-project/'+this.updateProject.idProfile]).then(() => {
-            window.location.reload();
-          });
+          this.toastr.success('Project updated successfully', 'Success');
+          setTimeout(() => {
+            this.router.navigate(['/list-project']).then(() => {
+              window.location.reload();
+            });
+          }, 1000);
         },
         error: (error) => {
           console.error('An error occurred:', error);
-          alert('An error occurred while updating the project.');
+          this.toastr.error('An error occurred while updating the project.', 'Error');
         }
       });
       }else{
         this.projectService.createProjectByUser(this.updateProject).subscribe({
           next: (response) => {
-            alert('Project created successfully');
-            this.router.navigate(['/list-project/'+this.updateProject.idProfile]).then(() => {
+            this.toastr.success('Project created successfully', 'Success');
+            this.router.navigate(['/list-project']).then(() => {
               window.location.reload();
             });
           },
           error: (error) => {
             console.error('An error occurred:', error);
-            alert('An error occurred while creating the project.');
+            this.toastr.error('An error occurred while creating the project.', 'Error');
           }
         });
       }
       
     } else {
       console.error('Form is invalid');
+      this.toastr.warning('Please fill in the form correctly before submitting.', 'Form Invalid');
     }
   }
-
 
   onClose() {
     this.closeForm.emit();

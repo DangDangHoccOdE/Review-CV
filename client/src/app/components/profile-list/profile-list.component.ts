@@ -28,7 +28,6 @@ export class ProfileListComponent implements OnInit {
       this.getByType(this.param);
     } else {
       this.getAll();
-      
     }
   }
 
@@ -37,7 +36,6 @@ export class ProfileListComponent implements OnInit {
       this.router.navigate(['profile/profile-user/', id]);
     }
   }
-
 
   getAll() {
     this.profileService.getProfilesList().subscribe(data => {
