@@ -6,6 +6,7 @@ import { JobServiceService } from '../../service/job-service.service';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { User } from '../../model/user';
 import { filter } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-job-list',
@@ -29,7 +30,7 @@ export class JobListComponent implements OnInit {
   @Input() user: User= new User();
   @Input() idCompany!: number | undefined ;
   @Input() isListJob: boolean = false;
-  constructor (private jobService:JobServiceService, public router: Router){
+  constructor (private jobService:JobServiceService, public router: Router,private toastr: ToastrService){
     const idProfileUser = localStorage.getItem('idProfileUser');
     this.idProfileNumber = idProfileUser ? Number(idProfileUser) : undefined;
     this.router.events.pipe(
@@ -99,7 +100,7 @@ export class JobListComponent implements OnInit {
     if(idJob && this.idProfileNumber){
       this.jobService.applyJobs(idJob, this.idProfileNumber).subscribe(data => {
         if(data){
-          alert("Job applied successfully");
+           this.toastr.success('You have successfully applied for the job!', 'Success');
           if(this.idCompany){
             this.getJobsByIdCompany(this.idCompany);
           }

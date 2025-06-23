@@ -5,6 +5,7 @@ import com.microservice.manager.dto.JobDTO;
 import com.microservice.manager.services.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,18 +18,21 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PostMapping("/hr/job/create")
     public ResponseEntity<ApiResponse<JobDTO>> create(@RequestBody JobDTO job) {
         JobDTO createdJob = jobService.create(job);
         return ResponseEntity.ok(new ApiResponse<>(true, "Job created", createdJob));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PostMapping("/hr/job/update")
     public ResponseEntity<ApiResponse<JobDTO>> update(@RequestBody JobDTO job) {
         JobDTO updatedJob = jobService.update(job);
         return ResponseEntity.ok(new ApiResponse<>(true, "Job updated", updatedJob));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PostMapping("/hr/job/delete")
     public ResponseEntity<ApiResponse<String>> delete(@RequestParam Integer id) {
         jobService.delete(id);
@@ -41,12 +45,14 @@ public class JobController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Job applied", job));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PutMapping("/hr/job/accept")
     public ResponseEntity<ApiResponse<JobDTO>> accept(@RequestParam Integer jobDTO, @RequestParam Integer idProfile) {
         JobDTO job = jobService.acceptProfile(jobDTO, idProfile);
         return ResponseEntity.ok(new ApiResponse<>(true, "Job accepted", job));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PutMapping("/hr/job/reject")
     public ResponseEntity<ApiResponse<JobDTO>> reject(@RequestParam Integer jobDTO, @RequestParam Integer idProfile) {
         JobDTO job = jobService.rejectProfile(jobDTO, idProfile);

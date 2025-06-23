@@ -4,6 +4,7 @@ import { Company } from '../../model/company';
 import { User } from '../../model/user';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-company',
@@ -20,7 +21,7 @@ export class CompanyComponent implements OnInit {
   selectedImageFile: File | null | undefined = null;
   editedCompany: Company = new Company();
 
-  constructor(private companyService: CompanyServiceService) {}
+  constructor(private companyService: CompanyServiceService,private toastr: ToastrService) {}
 
   ngOnInit(): void {
     const userCurrentString = localStorage.getItem('userCurrent');
@@ -38,6 +39,7 @@ export class CompanyComponent implements OnInit {
   getCompanyByIdHR(id: number): void {
     this.companyService.getCompanyByIddHr(id).subscribe(data => {
       this.company = data;
+      localStorage.setItem('idCompany', String(this.company.id));
     });
   }
 
@@ -83,14 +85,15 @@ export class CompanyComponent implements OnInit {
     this.companyService.updateCompany(formData).subscribe(() => {
       this.company = { ...this.editedCompany };
       this.isShowingCompany = false;
+
+      this.toastr.success('Company details updated successfully', 'Success');
+
       // Load lại dữ liệu công ty mới nhất
       if (this.userCurrent.role === 'manager' && this.userCurrent.id) {
         this.getCompanyByManager(this.userCurrent.id);
       } else if (this.userCurrent.role === 'hr' && this.userCurrent.id) {
         this.getCompanyByIdHR(this.userCurrent.id);
       }
-
-      alert('Company details updated successfully');
     });
   }
 }

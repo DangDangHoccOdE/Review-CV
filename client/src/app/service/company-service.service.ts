@@ -5,6 +5,7 @@ import { Company } from '../model/company';
 import { BehaviorSubject, catchError, map, Observable, observeOn, throwError } from 'rxjs';
 import { User } from '../model/user';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class CompanyServiceService {
   private companySource = new BehaviorSubject<Company|null>(null);
   company$ = this.companySource.asObservable();
 
-  constructor(private httpClient: HttpClient,private router:Router) { }
+  constructor(private httpClient: HttpClient,private router:Router,private toastr: ToastrService) { }
+
   private baseURL="http://localhost:8080/manager/";
 
   changeCompany(company: Company){
@@ -83,7 +85,7 @@ export class CompanyServiceService {
         if (!response.success) {
           throw new Error(response.message);
         }
-        alert('Delete company completed successfully')
+        this.toastr.success('Delete company completed successfully', 'Success');
       }),
       catchError(
         error => {

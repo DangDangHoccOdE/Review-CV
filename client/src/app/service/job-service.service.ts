@@ -5,6 +5,7 @@ import { Job } from '../model/job';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { Apiresponse } from '../apiresponse';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 export class JobServiceService {
   private job: Job | undefined;
 
-  constructor(private httpClient: HttpClient, private router: Router) { }
+  constructor(private httpClient: HttpClient, private router: Router,private toastr: ToastrService) { }
   private baseURL = "http://localhost:8080/manager/";
 
   createJob(job: Job): Observable<Job> {
@@ -78,16 +79,16 @@ export class JobServiceService {
         if (!response.success) {
           throw new Error(response.message);
         } else {
-          alert('Deleted Job successfully');
+          this.toastr.success('Deleted Job successfully', 'Success');
           window.location.reload();
         }
       },
       error => {
         if (error.status === 401) {
-          alert('Unauthorized access. Please log in again.');
+          this.toastr.error('Unauthorized access. Please log in again.', 'Unauthorized');
         } else {
           console.error('Error deleting job:', error);
-          alert('Failed to delete job.');
+          this.toastr.error('Failed to delete the job. Please try again.', 'Error');
         }
       },
       

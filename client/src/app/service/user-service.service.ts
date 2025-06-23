@@ -27,6 +27,7 @@ export class UserServiceService {
     return this.http.post<any>(this.baseURL+"/signin",user).pipe(
       map(response => {
         if(response.success){
+          console.log("Response: ", response)
           return response.data;
         }else{
           throw new Error(response.message);

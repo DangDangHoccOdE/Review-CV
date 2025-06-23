@@ -26,6 +26,8 @@ public enum Error {
     USER_UNABLE_TO_SAVE(1003, "Unable to save user", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_UNABLE_TO_UPDATE(1004, "Unable to update user", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_UNABLE_TO_DELETE(1005, "Unable to delete user", HttpStatus.INTERNAL_SERVER_ERROR),
+    USER_LOGIN(1006, "Account user can be blocked", HttpStatus.INTERNAL_SERVER_ERROR),
+
     //Jwt token-related errors
     JWT_INVALID(1101, "Invalid JWT token", HttpStatus.UNAUTHORIZED),
     JWT_EXPIRED(1102, "JWT token expired", HttpStatus.UNAUTHORIZED),

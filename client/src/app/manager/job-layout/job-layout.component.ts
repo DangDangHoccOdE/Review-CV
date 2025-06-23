@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotificationServiceService } from '../../service/notification-service.service';
 import { Notification } from '../../model/notification';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-job-layout',
@@ -37,7 +38,7 @@ export class JobLayoutComponent implements OnInit {
   searchTerm: string = '';
   searchCriteria: string = 'typeJob';
 
-  constructor(private jobService: JobServiceService, private profileService:ProfileServiceService, private router:Router, private fb:FormBuilder, private notificationService: NotificationServiceService) {
+  constructor(private jobService: JobServiceService, private profileService:ProfileServiceService, private router:Router, private fb:FormBuilder, private notificationService: NotificationServiceService,private toastr: ToastrService) {
     this.jobForm = this.fb.group({
       id: [],
       title: [''],
@@ -80,10 +81,7 @@ export class JobLayoutComponent implements OnInit {
   }
 
   viewDetailsJob(job:Job){
-    console.log(job+" View Details Job");
     this.job = job;
-    console.log("this.job.id "+ this.job.id);
-    console.log("this.job.idProfilePending "+ this.job.idProfiePending);
     if(this.job.idProfiePending){
       this.getProfileByJobPending(this.job.idProfiePending);
     }
@@ -111,7 +109,7 @@ export class JobLayoutComponent implements OnInit {
 
   onOk() {
     this.option = false;
-    alert("DElete" + this.idJob);
+    console.log("Deleting job with ID:", this.idJob);
     if(this.idJob){
       this.deleteJob(this.idJob);
     }
@@ -132,12 +130,12 @@ export class JobLayoutComponent implements OnInit {
       if(size && size>0){
         this.jobService.acceptProfileJob(idJob, idProfile).subscribe(data => {
         if(data){
-          alert("Profile accepted successfully");
+          this.toastr.success('Profile accepted successfully!', 'Success');
           this.getProfileById(idJob,idProfile);
         }
       })
       }else{
-        alert("Job full");
+        this.toastr.warning('This job has reached its maximum number of accepted profiles.', 'Job Full');
       }
     }
   }
@@ -165,14 +163,14 @@ export class JobLayoutComponent implements OnInit {
     if(idProfile&&idJob){
       this.jobService.rejectProfileJob(idJob, idProfile).subscribe(data => {
         if(data){
-          alert("Profile rejected successfully");
+          this.toastr.info('Profile rejected successfully.', 'Info');
         }
       })
     }
   }
 
   viewProfile(id?: number): void {
-    alert(id);
+    console.log("Viewing profile with ID:", id);
     if (id) {
       this.router.navigate(['manager/profile/profile-user/', id]);
     }
@@ -201,7 +199,7 @@ export class JobLayoutComponent implements OnInit {
 
   onSubmit(event:Event) {
     event.preventDefault();
-    alert("Submit");
+    console.log('Form submitted');
     if (this.jobForm.valid) {
       const jobData: Job = this.jobForm.value;
       if (this.isEditMode) {
@@ -218,7 +216,7 @@ export class JobLayoutComponent implements OnInit {
     if(jobData){
       jobData.idCompany = this.idCompany;
       this.jobService.createJob(jobData).subscribe(() => {
-        alert('Job created successfully');
+        this.toastr.success('Job created successfully!', 'Success');
         window.location.reload();
       });
     }
@@ -227,7 +225,7 @@ export class JobLayoutComponent implements OnInit {
   private updateJob(jobData: Job) {
     console.log('Updating job:', jobData);
     this.jobService.updateJob(jobData).subscribe(() => {
-      alert('Job updated successfully');
+      this.toastr.success('Job updated successfully!', 'Success');
       window.location.reload();
     });
   }

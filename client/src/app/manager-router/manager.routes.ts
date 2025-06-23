@@ -7,12 +7,15 @@ import { HrLayoutComponent } from "../manager/hr-layout/hr-layout.component";
 import { CompanyComponent } from "../manager/company/company.component";
 import { ProfileUserComponent } from "../components/profile-user/profile-user.component";
 import { EmloyeeLayoutComponent } from "../manager/emloyee-layout/emloyee-layout.component";
+import { AuthGuard } from "../guards/auth.guard";
 
 
 export const managerRoutes: Routes = [
     {
         path: '',
         component: ManagerLayoutComponent,
+        canActivate: [AuthGuard],
+        data: {role: ['admin', 'hr','manager']},
         children:[
             {
                 path: 'job',

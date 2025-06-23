@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../model/user';
 import { UserServiceService } from '../../service/user-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-company-list',
@@ -33,7 +34,8 @@ export class CompanyListComponent implements OnInit {
   constructor(
     private companyService: CompanyServiceService,
     private formBuilder: FormBuilder,
-    private userService:UserServiceService
+    private userService:UserServiceService,
+    private toastr: ToastrService
   ) {
     this.userForm = this.formBuilder.group({
       id: [''],
@@ -45,7 +47,6 @@ export class CompanyListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("Company start");
     this.initForm();
     this.getAllCompany();
   }
@@ -150,10 +151,10 @@ export class CompanyListComponent implements OnInit {
       this.isShowingCompany = false;
       this.initForm();
       this.getAllCompany();
-      alert('Company details updated successfully');
+      this.toastr.success('Company details updated successfully!', 'Success');
     }, error => {
       console.error('Error saving company:', error);
-      alert('Failed to update company details.');
+      this.toastr.error('Failed to update company details.', 'Error');
     });
   }
   
@@ -161,7 +162,7 @@ export class CompanyListComponent implements OnInit {
     if (this.userForm.valid) {
         this.saveUser();
     } else {
-      alert("Please fill out all required fields correctly.");
+      this.toastr.warning('Please fill out all required fields correctly.', 'Warning');
     }
   }
 
@@ -169,7 +170,7 @@ export class CompanyListComponent implements OnInit {
     const newUser: User = this.userForm.value;
     newUser.role = 'manager'; // Ensure the role is set to manager
     if (!newUser.name || !newUser.email || !newUser.password) {
-      alert("Please fill out all required fields!!!");
+      this.toastr.warning('Please fill out all required fields!', 'Warning');
       return;
     }
     if (this.idCompany) {
@@ -177,7 +178,7 @@ export class CompanyListComponent implements OnInit {
         next: data => {
           this.getAllCompany();
           this.closeModal();
-          alert("User added successfully");
+          this.toastr.success('User added successfully!', 'Success');
         },
         error: error => {
           const errorMessage = error?.message;

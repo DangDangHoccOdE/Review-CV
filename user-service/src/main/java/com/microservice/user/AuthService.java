@@ -2,6 +2,8 @@ package com.microservice.user;
 
 import com.microservice.user.dto.AuthenticationRequest;
 import com.microservice.user.dto.AuthenticationResponse;
+import com.microservice.user.exception.CustomException;
+import com.microservice.user.exception.Error;
 import com.microservice.user.model.Role;
 import com.microservice.user.model.User;
 import com.microservice.user.repository.UserRepository;
@@ -116,7 +118,10 @@ public class AuthService {
                     .build();
         }
         var user = userRepository.findByEmail(email).orElseThrow();
-        System.out.println("USER IS: " + user);
+
+        if(!user.isActive()){
+            throw new CustomException(Error.USER_LOGIN);
+        }
         var jwt = jwtTokenUtil.generateToken(user);
         var refreshToken = jwtTokenUtil.generateRefreshToken(new HashMap<>(), user);
         return AuthenticationResponse.builder()

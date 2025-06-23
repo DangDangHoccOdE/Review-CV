@@ -35,10 +35,8 @@ export class ProjectListComponent implements OnInit {
       this.userCurrent = JSON.parse(userCurrentString);
     }
     if(this.idProfile){
-      console.log("Tìm theo id profile: ", this.idProfile)
       this.getProjectIsDisplayByIdProfile(Number(this.idProfile));
     }else{
-      console.log("Tìm theo id user")
       this.getProfileByIdUser(this.userCurrent.id);
     }
   }
@@ -133,9 +131,6 @@ export class ProjectListComponent implements OnInit {
   }
 
   isCurrentUserProfile(): boolean {
-    console.log("Tìm theo id profile123123123: ", this.idProfile)
-    console.log("Id profiel: ", this.profile?.idUser)
-    console.log("Current:" , this.userCurrent.id)
     return this.profile?.idUser === this.userCurrent?.id;
   }
 

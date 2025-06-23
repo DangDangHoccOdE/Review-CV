@@ -5,6 +5,7 @@ import { UserServiceService } from '../../service/user-service.service';
 import { User } from '../../model/user';
 import { Form, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CompanyServiceService } from '../../service/company-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-hr-layout',
@@ -28,7 +29,7 @@ export class HrLayoutComponent implements OnInit {
   searchTerm: string = '';
   searchCriteria: string = 'id';
 
-  constructor(private userService: UserServiceService, private fb: FormBuilder, private companyService: CompanyServiceService) {
+  constructor(private userService: UserServiceService, private fb: FormBuilder, private companyService: CompanyServiceService, private toastr: ToastrService) {
     this.userForm = this.fb.group({
       id: [''],
       idEmployee: ['', Validators.required],
@@ -108,19 +109,17 @@ export class HrLayoutComponent implements OnInit {
         this.saveUser();
       }
     } else {
-      alert("Please fill out all required fields correctly.");
+      this.toastr.warning("Please fill out all required fields correctly.", "Invalid Input")
     }
   }
   
 
   saveUser(): void {
-    alert('save user');
-    alert(this.idCompany+ "idCompany")
     const newUser: User = this.userForm.value;
     newUser.role = 'hr';
     // Kiểm tra xem có trường dữ liệu nào còn trống không
     if (!newUser.idEmployee || !newUser.name || !newUser.email || !newUser.password) {
-      alert("Please fill out all required fields!!!");
+      this.toastr.warning("Please fill out all required fields!!!","warning")
       return;
     }
     if(this.idCompany){
@@ -128,7 +127,7 @@ export class HrLayoutComponent implements OnInit {
         this.filteredUsers = this.users;
         this.getAllUsers();
         this.closeModal();
-        alert("User added successfully");
+        this.toastr.success("User added successfully", "Success")
       }, error => {
         console.error('Lỗi khi đăng ký người dùng:', error);
         if (error.status === 409 || error.error.message === 'Email đã tồn tại') {
@@ -136,6 +135,8 @@ export class HrLayoutComponent implements OnInit {
         }
       });
       console.log(JSON.stringify(newUser));
+    }else{
+      console.log("K co id company")
     }
     
   }
@@ -147,23 +148,20 @@ export class HrLayoutComponent implements OnInit {
   
     // Tìm dữ liệu hiện tại của người dùng
     const currentUser = this.users.find(user => user.idEmployee === this.userForm.get('idEmployee')?.value);
-    console.log(JSON.stringify(this.users));
-    console.log(JSON.stringify(updatedUser) + " from JSON");
-    console.log(this.users[0].idEmployee+" idEmployee "+ this.userForm.get('idEmployee')?.value);
     if (!currentUser) {
-      alert('User not found');
+      this.toastr.warning("User not found", "Warning");
       return;
     }
 
     if(currentUser.id === updatedUser.id && currentUser.email === updatedUser.email && currentUser.name === updatedUser.name && currentUser.password === updatedUser.password){
-      alert("Nothing to update!!!");
+      this.toastr.info("Nothing to update!!!", "Info");
       return;
     }
 
   
     // Kiểm tra xem có trường dữ liệu nào còn trống không
     if (!updatedUser.id || !updatedUser.name || !updatedUser.email || !updatedUser.password) {
-      alert("Please fill out all required fields!!!");
+      this.toastr.warning("Please fill out all required fields!!!", "Warning");
       return;
     }
   
@@ -175,7 +173,7 @@ export class HrLayoutComponent implements OnInit {
           this.users[index] = updatedUser;
           this.getAllUsers(); // Tải lại danh sách người dùng
           this.filteredUsers = this.users;
-          alert("User updated successfully");
+          this.toastr.success("User updated successfully", "Success");
         }
       }
       this.closeModal();
@@ -195,9 +193,10 @@ export class HrLayoutComponent implements OnInit {
         this.users = this.users.filter(user => user.id !== id);
         this.getAllUsers();
         this.filteredUsers = this.users;
-        alert("User deleted successfully");
+        this.toastr.success("User deleted successfully", "Success");
       }, error => {
         console.error('Error deleting user:', error);
+        this.toastr.error("Error deleting user", "Error");
       });
     } else {
       console.log('User deletion canceled');

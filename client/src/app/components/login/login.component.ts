@@ -85,6 +85,8 @@ export class LoginComponent {
           // Thêm lỗi nếu mật khẩu không đúng
           this.userForm.get('password')?.setErrors({ invalidCredentials: true });
           console.error('Invalid email or password');
+        }else if(error.error.message === "Account user can be blocked"){
+          this.toastr.error('Your account may have been blocked. Please contact the administrator!', 'Error');
         }
       }
     );

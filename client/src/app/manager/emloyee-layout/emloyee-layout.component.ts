@@ -7,6 +7,7 @@ import { JobServiceService } from '../../service/job-service.service';
 import { Job } from '../../model/job';
 import { ProfileServiceService } from '../../service/profile-service.service';
 import { Profile } from '../../model/profile';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-emloyee-layout',
@@ -25,7 +26,8 @@ export class EmloyeeLayoutComponent implements OnInit {
     private userService: UserServiceService, 
     private router: Router, 
     private jobService: JobServiceService,
-    private profileService: ProfileServiceService
+    private profileService: ProfileServiceService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +75,7 @@ export class EmloyeeLayoutComponent implements OnInit {
 
   deleteUser(id: number): void {
     this.userService.deleteUser(id).subscribe(() => {
-      alert('User deleted successfully');
+      this.toastr.success('User deleted successfully!', 'Success');
       if (this.idCompany) {
         this.getJobsByCompany(this.idCompany);
       }
