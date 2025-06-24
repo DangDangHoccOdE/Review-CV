@@ -2,6 +2,22 @@ spring:
   application:
     name: email-service
 
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: email-service-group  # Group dùng cho @KafkaListener
+      auto-offset-reset: earliest    # Nếu chưa có offset → bắt đầu từ đầu
+      enable-auto-commit: false      # Chủ động commit khi xử lý xong
+      max-poll-records: 500          # Lấy 500 message mỗi lần poll
+      properties:
+        fetch.min.bytes: 50000       # Tối ưu performance (ít network hơn)
+    producer:
+      retries: 5                     # Tự động gửi lại nếu lỗi
+      batch-size: 16384              # Gửi theo lô (bytes)
+      linger-ms: 5                   # Đợi 5ms để batch đủ lớn rồi gửi
+      compression-type: zstd         # Giảm size message
+      acks: all                      # Đảm bảo Kafka ghi đủ vào replication
+
   mail:
     host: smtp.gmail.com
     port: 587
