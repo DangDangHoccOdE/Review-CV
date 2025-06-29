@@ -133,7 +133,7 @@
                     <label for="size">Team size:</label>
                     <input type="number" id="size" formControlName="size" placeholder="Enter job Team size">
                 </div>
-                <div class="form_buttons d-flex justify-content-between">
+                <div class="form_buttons d-flex justify-content-between gap-3">
                     <button type="button" (click)="onSubmit($event)" id="submitBtn" class="btn btn-primary">{{ isEditMode ? 'Save' : 'Create' }}</button>
                     <button type="button" (click)="onClose()" class="btn btn-secondary">Cancel</button>
                 </div>

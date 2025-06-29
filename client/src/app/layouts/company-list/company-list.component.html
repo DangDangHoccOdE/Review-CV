@@ -164,8 +164,10 @@
         <label>Preview Image</label><br>
         <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" style="max-height: 150px;">
       </div>
-      <button type="submit" class="btn btn-primary me-2">Save</button>
-      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+      <div class="form_buttons d-flex justify-content-between gap-2">
+        <button type="submit" class="btn btn-primary me-2">Save</button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+      </div>
     </form>
   </div>
 </div>

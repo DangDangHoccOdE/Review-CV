@@ -177,6 +177,7 @@ export class ProfileServiceService {
       }),
       catchError(
         error => {
+          console.error('Error fetching profile by user ID:', error);
           if (error instanceof HttpErrorResponse && error.status === 401) {
             this.router.navigate(['/login']);
             localStorage.removeItem('authToken');

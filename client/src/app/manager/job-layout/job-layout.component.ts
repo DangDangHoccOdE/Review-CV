@@ -132,6 +132,11 @@ export class JobLayoutComponent implements OnInit {
         if(data){
           this.toastr.success('Profile accepted successfully!', 'Success');
           this.getProfileById(idJob,idProfile);
+          const userCurrentString = localStorage.getItem('idCompany');
+          if(userCurrentString){
+            this.idCompany = Number(userCurrentString);
+            this.getJobsByCompany(this.idCompany);
+          }
         }
       })
       }else{
@@ -164,6 +169,11 @@ export class JobLayoutComponent implements OnInit {
       this.jobService.rejectProfileJob(idJob, idProfile).subscribe(data => {
         if(data){
           this.toastr.info('Profile rejected successfully.', 'Info');
+          const userCurrentString = localStorage.getItem('idCompany');
+          if(userCurrentString){
+            this.idCompany = Number(userCurrentString);
+            this.getJobsByCompany(this.idCompany);
+          }
         }
       })
     }

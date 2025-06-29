@@ -3,7 +3,7 @@ spring:
     name: email-service
 
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: 192.168.100.208:9092
     consumer:
       group-id: email-service-group  # Group dùng cho @KafkaListener
       auto-offset-reset: earliest    # Nếu chưa có offset → bắt đầu từ đầu

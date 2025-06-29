@@ -91,7 +91,7 @@ export class JobServiceService {
           this.toastr.error('Failed to delete the job. Please try again.', 'Error');
         }
       },
-      
+
     );
   }
 
@@ -211,6 +211,7 @@ export class JobServiceService {
         if (response.success) {
           return this.mapToJob(response.data);
         } else {
+          console.log("Response: ", response)
           throw new Error(response.message);
         }
       })
